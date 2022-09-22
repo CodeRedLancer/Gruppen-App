@@ -1,3 +1,11 @@
+/*
+ * App.java
+ *
+ * Created on 2022-09-22
+ *
+ * Copyright (C) 2022 Volkswagen AG, All rights reserved.
+ */
+
 package org.abs;
 
 import javafx.application.Application;
@@ -11,18 +19,21 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-    @Override
-    public void start(Stage stage) {
-        var javaVersion = SystemInfo.javaVersion();
-        var javafxVersion = SystemInfo.javafxVersion();
+    private static final char PERIOD = '.';
 
-        var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        var scene = new Scene(new StackPane(label), 640, 480);
-        stage.setScene(scene);
-        stage.show();
+    @Override
+    public void start(final Stage primaryStage) {
+        final var javaVersion = SystemInfo.javaVersion();
+        final var javafxVersion = SystemInfo.javafxVersion();
+
+        final var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + PERIOD);
+        final var scene = new Scene(new StackPane(label), 640, 480);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         launch();
     }
 
