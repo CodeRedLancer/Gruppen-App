@@ -28,13 +28,17 @@ public class UI {
     }
 
     private HBox createDropDownMenu() {
-        ChoiceBox<String> assetsClass = new ChoiceBox<>();
-        assetsClass.getItems().addAll("LF 10");
-        assetsClass.getItems().addAll("LF 11");
-        assetsClass.setValue("Lernfelder");
-        var hbox = new HBox(assetsClass);
+        var hbox = new HBox(createChoiceBox());
         hbox.setAlignment(Pos.TOP_CENTER);
 
         return hbox;
+    }
+
+    private ChoiceBox<String> createChoiceBox() {
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.getItems().addAll("LF 10", "LF 11");
+        choiceBox.setValue("Lernfelder");
+
+        return choiceBox;
     }
 }
