@@ -9,10 +9,16 @@
 package org.abs;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+
+import java.util.ArrayList;
 
 /**
  * JavaFX App
@@ -23,13 +29,9 @@ public class App extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
-        final var javaVersion = SystemInfo.javaVersion();
-        final var javafxVersion = SystemInfo.javafxVersion();
+        var ui = UI.getInstance();
+        ui.createUI(primaryStage);
 
-        final var label = new Label("Hallo, JavaFX " + javafxVersion + ", läuft auf Java " + javaVersion + PERIOD);
-        final var scene = new Scene(new StackPane(label), 640, 480);
-        primaryStage.setScene(scene);
-        primaryStage.show();
 
     }
 
