@@ -31,8 +31,6 @@ public class App extends Application {
     public void start(final Stage primaryStage) {
         var ui = UI.getInstance();
         ui.createUI(primaryStage);
-
-
     }
 
     public static void main(final String[] args) {
