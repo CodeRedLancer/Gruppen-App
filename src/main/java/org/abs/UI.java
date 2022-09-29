@@ -38,7 +38,15 @@ public class UI {
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll("LF 10", "LF 11");
         choiceBox.setValue("Lernfelder");
+        choiceBox.setOnAction(event -> {
+            handleChoiceBoxEvent(choiceBox);
+        });
 
         return choiceBox;
+    }
+
+    private void handleChoiceBoxEvent(ChoiceBox<String> choiceBox) {
+        var selectedItem = choiceBox.getSelectionModel().getSelectedItem();
+        System.out.println(selectedItem);
     }
 }
