@@ -1,0 +1,10 @@
+@startuml
+
+actor Teacher as t
+participant UI as ui
+participant Backend as b
+database DB as db
+
+
+
+@enduml
