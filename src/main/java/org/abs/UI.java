@@ -7,10 +7,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -36,16 +33,12 @@ public class UI {
         var buttonVbox = new VBox(button);
         buttonVbox.setAlignment(Pos.BOTTOM_CENTER);
 
-        var rootPane = new Pane();
-        //dropDownVBox.getChildren().add(rootPane);
-        //tableVBox.getChildren().add(rootPane);
-        //buttonVbox.getChildren().add(rootPane);
+        var borderPane = new BorderPane();
+        borderPane.setTop(dropDownVBox);
+        borderPane.setCenter(tableVBox);
+        borderPane.setBottom(buttonVbox);
 
-        rootPane.getChildren().addAll(dropDownVBox, tableVBox, buttonVbox);
-        var vbox = new VBox();
-        vbox.getChildren().addAll(rootPane);
-
-        var scene = new Scene(vbox, 640, 480);
+        var scene = new Scene(borderPane, 640, 480);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
