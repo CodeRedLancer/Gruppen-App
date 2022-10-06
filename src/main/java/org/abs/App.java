@@ -25,8 +25,6 @@ import java.util.ArrayList;
  */
 public class App extends Application {
 
-    private static final char PERIOD = '.';
-
     @Override
     public void start(final Stage primaryStage) {
         var ui = UI.getInstance();
