@@ -9,6 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import org.abs.gruppenapp.Entitys.Student;
 
 import java.util.ArrayList;
 import java.util.List;
