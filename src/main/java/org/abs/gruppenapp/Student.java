@@ -1,4 +1,4 @@
-package org.abs;
+package org.abs.gruppenapp;
 
 public class Student {
 

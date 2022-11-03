@@ -1,4 +1,4 @@
-package org.abs;
+package org.abs.gruppenapp;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
