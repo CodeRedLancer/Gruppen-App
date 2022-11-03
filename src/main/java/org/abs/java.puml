@@ -1,0 +1,77 @@
+@startuml
+
+namespace backend{
+class           LehrerRepository{
+Speichern()
+Ändern()
+Löschen()
+}
+
+class           SchülerRepository{
+Speichern()
+Ändern()
+Löschen()
+}
+
+class LernfeldRepository{
+Speichern()
+Ändern()
+Löschen()
+}
+
+class           LehrerEntity{
+Vorname
+Nachname
+}
+
+class           SchülerEntity{
+Vorname
+Nachname
+}
+
+class LernfeldEntity{
+Schüler
+Lehrer
+Bewertung
+}
+
+class Datenbankverbindung{
+Daten
+VerbindungAufbauen()
+VerbindungAbbauen()
+}
+
+LehrerEntity <-- LehrerRepository
+SchülerEntity <-- SchülerRepository
+LernfeldEntity <-- LernfeldRepository
+
+LehrerRepository --> Datenbankverbindung
+SchülerRepository --> Datenbankverbindung
+LernfeldRepository --> Datenbankverbindung
+}
+
+
+namespace frontend{
+
+class           Lernfeld{
+Schüler
+Lehrer
+Bewertungen
+}
+
+class           Lehrer{
+Vorname
+Nachname
+}
+
+class           Schüler{
+Vorname
+Nachname
+}
+
+Lehrer -> Lernfeld
+Schüler --> Lernfeld
+}
+
+
+@enduml
