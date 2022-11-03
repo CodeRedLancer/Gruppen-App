@@ -1,0 +1,17 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor teacher as t
+
+rectangle GruppenApp {
+    t -- (add)
+    t -- (delete)
+    t -- (edit)
+    t -- (groupStudents)
+    (groupStudents) .> (groupHete) : include
+    (groupStudents) .> (groupNorm) : include
+}
+
+@enduml
+
