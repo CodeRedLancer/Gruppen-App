@@ -35,7 +35,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.3</version>
                 <configuration>
-                    <mainClass>org.abs.App</mainClass>
+                    <mainClass>org.abs.gruppenapp.App</mainClass>
                 </configuration>
             </plugin>
         </plugins>

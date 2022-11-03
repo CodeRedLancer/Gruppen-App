@@ -1,4 +1,4 @@
 module org.openjfx {
     requires javafx.controls;
-    exports org.abs;
+    exports org.abs.gruppenapp;
 }
