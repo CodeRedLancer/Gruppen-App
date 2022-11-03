@@ -1,15 +1,15 @@
-package org.abs.gruppenapp;
+package org.abs.gruppenapp.Entitys;
 
-public class Student {
-
+public class Teacher {
     private String firstName;
     private String lastName;
-    private Integer evaluation;
 
-    public Student(String firstName, String lastName, Integer evaluation) {
+    private String password;
+
+    public Teacher(String firstName, String lastName, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.evaluation = evaluation;
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -20,7 +20,7 @@ public class Student {
         return lastName;
     }
 
-    public Integer getEvaluation() {
-        return evaluation;
+    public String getPassword(){
+        return password;
     }
 }
