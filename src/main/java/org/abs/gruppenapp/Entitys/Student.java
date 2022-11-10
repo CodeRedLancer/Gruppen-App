@@ -5,6 +5,7 @@ public class Student {
     private String firstName;
     private String lastName;
     private Integer evaluation;
+    private Integer id;
 
     public Student(String firstName, String lastName, Integer evaluation) {
         this.firstName = firstName;
@@ -22,5 +23,9 @@ public class Student {
 
     public Integer getEvaluation() {
         return evaluation;
+    }
+
+    public Integer getId() {
+        return id;
     }
 }
