@@ -7,58 +7,29 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity(name = "Teacher")
 @Table(name = "teacher_table")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Teacher {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int teacherId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int teacherId;
 
-    @Column(name = "firstName")
-    private String firstName;
+  @Column(name = "firstName")
+  private String firstName;
 
-    @Column(name = "lastName")
-    private String lastName;
+  @Column(name = "lastName")
+  private String lastName;
 
-    @Column(name = "password")
-    private String password;
-
-    public Teacher() {
-    }
-
-    public Teacher(String firstName, String lastName, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-    }
-
-    public int getTeacherId() {
-        return teacherId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  @Column(name = "password")
+  private String password;
 }
