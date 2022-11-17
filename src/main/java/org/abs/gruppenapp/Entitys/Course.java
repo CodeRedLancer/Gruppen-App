@@ -25,8 +25,16 @@ import java.lang.reflect.Array;
 public class Course {
 
     private int idTeacher;
+    @Column(name = "name")
     private String name;
     private Array students;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int courseId;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Integer> teacherId = new HashSet<>();
 
     public Course(int idTeacher, String name, Array students) {
         this.idTeacher = idTeacher;
@@ -43,13 +51,4 @@ public class Course {
     }
 
     public Array getStudents() {return students;}
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int courseId;
-
-  @OneToMany(fetch = FetchType.LAZY)
-  private Set<Integer> teacherId = new HashSet<>();
-
-  @Column(name = "name")
-  private String name;
 }

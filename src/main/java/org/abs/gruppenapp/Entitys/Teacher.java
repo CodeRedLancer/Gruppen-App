@@ -30,6 +30,7 @@ public class Teacher {
   @Column(name = "lastName")
   private String lastName;
 
+    @Column(name = "password")
     private String password;
     private Integer id;
 
@@ -54,6 +55,4 @@ public class Teacher {
     public Integer getId(){
         return id;
     }
-  @Column(name = "password")
-  private String password;
 }

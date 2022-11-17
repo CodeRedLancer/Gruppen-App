@@ -36,7 +36,7 @@ public class CourseService {
         System.out.println("remove Student");
     }
 
-    public void editCourseName(Integer teacherId, String name) {
+    public void editCourseName(Integer courseId, String name) {
 
         System.out.println("edit course name");
     }

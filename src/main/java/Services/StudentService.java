@@ -14,13 +14,13 @@ public class StudentService {
         System.out.println("delete User");
     }
 
-    public void editStudentName(Integer studentId, String lastName) {
+    public void editStudentLastName(Integer studentId, String lastName) {
 
         System.out.println("edit Student lastName");
     }
 
-    public void editStudentName(Integer studentId, String lastName, String firstName) {
+    public void editStudentFirstName(Integer studentId, String firstName) {
 
-        System.out.println("edit Student lastName and firstName");
+        System.out.println("edit Student firstName");
     }
 }

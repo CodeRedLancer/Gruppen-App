@@ -14,13 +14,13 @@ public class TeacherService {
         System.out.println("delete teacher");
     }
 
-    public void editTeacherName(Integer teacherId, String lastName) {
+    public void editTeacherLastName(Integer teacherId, String lastName) {
 
         System.out.println("edit teacher lastName");
     }
 
-    public void editTeacherName(Integer teacherId, String lastName, String firstName) {
+    public void editTeacherFirstName(Integer teacherId, String firstName) {
 
-        System.out.println("edit teacher lastName and firstName");
+        System.out.println("edit teacher firstName");
     }
 }
