@@ -31,10 +31,4 @@ public class Student {
 
   @Column(name = "evaluation")
   private int evaluation;
-
-  public Student(String firstName, String lastName, int evaluation) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.evaluation = evaluation;
-  }
 }
