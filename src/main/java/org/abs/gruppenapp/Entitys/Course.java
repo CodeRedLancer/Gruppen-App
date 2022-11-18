@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.lang.reflect.Array;
 
 @Entity(name = "Course")
 @Table(name = "course_table")
@@ -23,13 +24,31 @@ import lombok.Setter;
 @Setter
 public class Course {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int courseId;
+    private int idTeacher;
+    @Column(name = "name")
+    private String name;
+    private Array students;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  private Set<Integer> teacherId = new HashSet<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int courseId;
 
-  @Column(name = "name")
-  private String name;
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Integer> teacherId = new HashSet<>();
+
+    public Course(int idTeacher, String name, Array students) {
+        this.idTeacher = idTeacher;
+        this.name = name;
+        this.students = students;
+    }
+
+    public int getIdTeacher() {
+        return idTeacher;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Array getStudents() {return students;}
 }
