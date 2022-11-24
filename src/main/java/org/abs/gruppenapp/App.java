@@ -17,7 +17,7 @@ public class App extends Application {
     @Override
     public void start(final Stage primaryStage) {
         var ui = UI.getInstance();
-        ui.createUI(primaryStage);
+        ui.switchToClassSelection(primaryStage);
     }
 
     public static void main(final String[] args) {

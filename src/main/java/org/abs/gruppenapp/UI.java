@@ -1,6 +1,7 @@
 package org.abs.gruppenapp;
 
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -26,40 +27,69 @@ public class UI {
         return instance;
     }
 
-    public void createUI(Stage primaryStage) {
-        var dropDownVBox = createDropDownMenu();
-        var tableVBox = createTableBox();
-
-        var button = new Button("Create groups");
-        var buttonVbox = new VBox(button);
-        buttonVbox.setAlignment(Pos.BOTTOM_CENTER);
+    public void switchToClassSelection(Stage primaryStage) {
+        var choiceBox = createChoiceBox(List.of("2402", "2403"), "Klassen");
+        var vBox = createVBox(choiceBox, Pos.TOP_LEFT);
 
         var borderPane = new BorderPane();
-        borderPane.setTop(dropDownVBox);
-        borderPane.setCenter(tableVBox);
-        borderPane.setBottom(buttonVbox);
+        borderPane.setTop(vBox);
 
-        var scene = new Scene(borderPane, 640, 480);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        choiceBox.setOnAction(event -> {
+            switchToLFSelection(primaryStage, vBox);
+        });
+
+        setScene(primaryStage, borderPane);
     }
 
-    private VBox createDropDownMenu() {
-        var vBox = new VBox(createChoiceBox());
-        vBox.setAlignment(Pos.TOP_CENTER);
+    private void switchToLFSelection(Stage primaryStage, VBox vBox) {
+        System.out.println("Calling service to get LFs");
+        List<String> items = new ArrayList<>(List.of("LF1", "LF2"));
+        var choiceBox = createChoiceBox(items, "Lernfelder");
+        var lfVBox = createVBox(choiceBox, Pos.TOP_LEFT);
+
+        var gridPane = new GridPane();
+        gridPane.addRow(0, vBox, lfVBox);
+
+        var borderPane = new BorderPane();
+        borderPane.setTop(gridPane);
+
+        choiceBox.setOnAction(event -> {
+            System.out.println("Calling service to get students");
+            switchToStudentMenu(primaryStage, borderPane);
+        });
+
+        setScene(primaryStage, borderPane);
+    }
+
+    private void switchToStudentMenu(Stage primaryStage, BorderPane borderPane) {
+        var createGroupsButton = new Button("Gruppen erstellen");
+        var editClassButton = new Button("Klasse bearbeiten");
+        var buttonVBox = new VBox(createGroupsButton, editClassButton);
+
+        borderPane.setCenter(createTableBox());
+        borderPane.setBottom(buttonVBox);
+        setScene(primaryStage, borderPane);
+    }
+
+    private ChoiceBox<String> createChoiceBox(List<String> items, String value) {
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.getItems().addAll(items);
+        choiceBox.setValue(value);
+
+        return choiceBox;
+    }
+
+    private VBox createVBox(ChoiceBox choiceBox, Pos pos) {
+        var vBox = new VBox(choiceBox);
+        vBox.setAlignment(pos);
 
         return vBox;
     }
 
-    private ChoiceBox<String> createChoiceBox() {
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.getItems().addAll("LF 10", "LF 11");
-        choiceBox.setValue("Lernfelder");
-        choiceBox.setOnAction(event -> {
-            handleChoiceBoxEvent(choiceBox);
-        });
-
-        return choiceBox;
+    private void setScene(Stage primaryStage, Parent parent) {
+        var scene = new Scene(parent, 640, 480);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     private VBox createTableBox() {
