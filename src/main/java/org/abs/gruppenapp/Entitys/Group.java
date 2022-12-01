@@ -28,12 +28,4 @@ public class Group {
 
     @Column(name = "description")
     private String description;
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setIdCourse(int idCourse){
-        this.idCourse = idCourse;
-    }
 }

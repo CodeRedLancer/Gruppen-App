@@ -27,12 +27,4 @@ public class Grouping {
     private int idGroup;
     @Column(name = "idStudent")
     private int idStudent;
-
-    public void setIdGroup(int idGroup){
-        this.idGroup = idGroup;
-    }
-
-    public void setIdStudent(int idStudent){
-        this.idStudent = idStudent;
-    }
 }
