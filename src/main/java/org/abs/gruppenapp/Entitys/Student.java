@@ -19,6 +19,10 @@ import lombok.Setter;
 @Setter
 public class Student {
 
+    private String firstName;
+    private String lastName;
+    private Integer evaluation;
+    private Integer id;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int studentId;
@@ -31,10 +35,17 @@ public class Student {
 
   @Column(name = "evaluation")
   private int evaluation;
+}
 
-  public Student(String firstName, String lastName, int evaluation) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.evaluation = evaluation;
-  }
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Integer getEvaluation() {
+        return evaluation;
+    }
+
+    public Integer getId() {
+        return id;
+    }
 }
