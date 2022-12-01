@@ -32,4 +32,5 @@ public class Teacher {
 
   @Column(name = "password")
   private String password;
+  private Integer id;
 }
