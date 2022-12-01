@@ -28,7 +28,7 @@ public class Course {
   private int courseId;
 
   @OneToMany(fetch = FetchType.LAZY)
-  private Set<Integer> teacherId = new HashSet<>();
+  private Set<Teacher> teacherId = new HashSet<>();
 
   @Column(name = "name")
   private String name;

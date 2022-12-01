@@ -1,20 +1,17 @@
 package org.abs.gruppenapp.gui;
 
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Component;
+
 import javax.swing.*;
-import org.springframework.boot.builder.SpringApplicationBuilder;
+import java.awt.event.ActionEvent;
 
-@SpringBootApplication
-public class SwingApp extends JFrame {
+@Component
+public class SwingTest extends JFrame {
 
-  public SwingApp() {
-
-    initUI();
+  public SwingTest() {
   }
 
-  private void initUI() {
+  public void initUI() {
 
     var quitButton = new JButton("Quit");
 
@@ -28,6 +25,7 @@ public class SwingApp extends JFrame {
     setSize(300, 200);
     setLocationRelativeTo(null);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
+    setVisible(true);
   }
 
   private void createLayout(JComponent... arg) {
@@ -46,17 +44,4 @@ public class SwingApp extends JFrame {
         .addComponent(arg[0])
     );
   }
-
-  public static void main(String[] args) {
-
-    var ctx = new SpringApplicationBuilder(SwingApp.class)
-        .headless(false).run(args);
-
-    EventQueue.invokeLater(() -> {
-
-      var ex = ctx.getBean(SwingApp.class);
-      ex.setVisible(true);
-    });
-  }
-
 }
