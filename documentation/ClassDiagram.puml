@@ -41,6 +41,19 @@ VerbindungAufbauen()
 VerbindungAbbauen()
 }
 
+class           Gruppeneinteilung{
+Gruppeneinteilung
+}
+
+class           Gruppe{
+Bezeichnung
+}
+
+SchülerEntity --> Gruppe
+SchülerEntity --> Gruppeneinteilung
+Gruppe --> Gruppeneinteilung
+LernfeldEntity --> Gruppe
+
 LehrerEntity <-- LehrerRepository
 SchülerEntity <-- SchülerRepository
 LernfeldEntity <-- LernfeldRepository
@@ -69,7 +82,8 @@ Vorname
 Nachname
 }
 
-Lehrer -> Lernfeld
+
+Lehrer --> Lernfeld
 Schüler --> Lernfeld
 }
 
