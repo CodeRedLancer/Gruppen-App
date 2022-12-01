@@ -1,5 +1,7 @@
 package org.abs.gruppenapp.Entitys;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,15 +27,16 @@ import lombok.Setter;
 @Setter
 public class Course {
 
-    private int idTeacher;
     @Column(name = "name")
     private String name;
-    private List<Student> students;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int courseId;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  private Set<Teacher> teacherId = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Teacher> teacherId = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Student> students = new ArrayList<>();
 }
