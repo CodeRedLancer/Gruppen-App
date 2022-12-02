@@ -12,14 +12,13 @@ public class Gui extends JFrame {
         String[] courses = {"Kurs", "2402", "2403"};
 
         var courseSelection = createComboBox(courses);
-        var flowLayout = new FlowLayout();
-        flowLayout.setAlignment(FlowLayout.LEFT);
 
         setTitle("Gruppen-App");
         setSize(500, 500);
-        var panel = new JPanel();
-        panel.setLayout(flowLayout);
+
+        var panel = createPanel();
         panel.add(courseSelection, FlowLayout.LEFT);
+
         updateFrame(panel);
 
         courseSelection.addActionListener(event -> {
@@ -27,11 +26,21 @@ public class Gui extends JFrame {
         });
     }
 
+    private JPanel createPanel() {
+        var flowLayout = new FlowLayout();
+        var panel = new JPanel();
+
+        flowLayout.setAlignment(FlowLayout.LEFT);
+        panel.setLayout(flowLayout);
+
+        return panel;
+    }
+
     private void lfSelection(JPanel panel) {
         String[] lf = {"LF", "LF1", "LF2"};
+        var lfSelection = createComboBox(lf);
 
-        panel.add(createComboBox(lf));
-
+        panel.add(lfSelection);
         updateFrame(panel);
     }
 
