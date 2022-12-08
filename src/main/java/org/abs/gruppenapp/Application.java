@@ -1,9 +1,8 @@
 package org.abs.gruppenapp;
 
-import org.abs.gruppenapp.gui.SwingTest;
+import org.abs.gruppenapp.gui.Gui;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class Application {
@@ -13,7 +12,7 @@ public class Application {
     builder.headless(false);
 
     var context = builder.run(args);
-    var swingApp = context.getBean(SwingTest.class);
-    swingApp.initUI();
+    var gui = context.getBean(Gui.class);
+    gui.classSelection();
   }
 }
