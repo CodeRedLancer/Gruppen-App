@@ -1,6 +1,6 @@
 package org.abs.gruppenapp.repository;
 
-import org.abs.gruppenapp.Entitys.Course;
+import org.abs.gruppenapp.entities.Course;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
