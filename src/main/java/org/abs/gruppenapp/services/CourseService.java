@@ -1,8 +1,8 @@
-package Services;
+package org.abs.gruppenapp.services;
 
-import org.abs.gruppenapp.Entitys.Course;
-import org.abs.gruppenapp.Entitys.Student;
-import org.abs.gruppenapp.Entitys.Teacher;
+import org.abs.gruppenapp.entities.Course;
+import org.abs.gruppenapp.entities.Student;
+import org.abs.gruppenapp.entities.Teacher;
 
 public class CourseService {
 

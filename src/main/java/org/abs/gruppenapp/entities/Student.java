@@ -1,4 +1,4 @@
-package org.abs.gruppenapp.Entitys;
+package org.abs.gruppenapp.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,25 +6,30 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "Grouping")
-@Table(name = "grouping_table")
+@Entity(name = "Student")
+@Table(name = "student_table")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Grouping {
+public class Student {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idGrouping;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int studentId;
 
-    @Column(name = "idGroup")
-    private int idGroup;
-    @Column(name = "idStudent")
-    private int idStudent;
+  @Column(name = "firstName")
+  private String firstName;
+
+  @Column(name = "lastName")
+  private String lastName;
+
+  @Column(name = "evaluation")
+  private int evaluation;
 }
