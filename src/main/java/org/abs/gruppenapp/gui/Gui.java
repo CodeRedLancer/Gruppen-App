@@ -13,7 +13,7 @@ public class Gui extends JFrame {
 
         var courseSelection = createComboBox(courses);
 
-        setTitle("Gruppen-App");
+        setTitle("GroupMaker 8");
         setSize(500, 500);
 
         var panel = createPanel();
@@ -22,7 +22,9 @@ public class Gui extends JFrame {
         updateFrame(panel);
 
         courseSelection.addActionListener(event -> {
-            lfSelection(panel);
+            var comboBox = (JComboBox<String>) event.getSource();
+            System.out.println("Getting info for: " + comboBox.getSelectedItem());
+            fachrichtungSelection(panel);
         });
     }
 
@@ -36,8 +38,22 @@ public class Gui extends JFrame {
         return panel;
     }
 
+    private void fachrichtungSelection(JPanel panel) {
+        String[] fachrichtung = {"Fachrichtung", "Anwendungsentwickler", "Systemintegration", "Kaufleute"};
+        var fachrichtungSelection = createComboBox(fachrichtung);
+
+        panel.add(fachrichtungSelection);
+        updateFrame(panel);
+
+        fachrichtungSelection.addActionListener(event -> {
+            var comboBox = (JComboBox<String>) event.getSource();
+            System.out.println("Getting info for: " + comboBox.getSelectedItem());
+            lfSelection(panel);
+        });
+    }
+
     private void lfSelection(JPanel panel) {
-        String[] lf = {"LF", "LF1", "LF2"};
+        String [] lf = {"Lernfelder", "LF1", "LF2"};
         var lfSelection = createComboBox(lf);
 
         panel.add(lfSelection);
