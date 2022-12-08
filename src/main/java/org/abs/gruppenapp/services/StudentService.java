@@ -1,6 +1,6 @@
-package Services;
+package org.abs.gruppenapp.services;
 
-import org.abs.gruppenapp.Entitys.Student;
+import org.abs.gruppenapp.entities.Student;
 
 public class StudentService {
 
