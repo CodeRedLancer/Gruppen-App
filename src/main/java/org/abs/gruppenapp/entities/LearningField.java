@@ -17,32 +17,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "Teacher")
-@Table(name = "teacher_table")
+@Entity(name = "LearningField")
+@Table(name = "lf_table")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Teacher {
+public class LearningField {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "teacherId")
-  private int teacherId;
+  @Column(name = "lfId")
+  private int lfId;
 
-  @Column(name = "firstName")
-  private String firstName;
+  @Column(name = "name")
+  private String name;
 
-  @Column(name = "lastName")
-  private String lastName;
-
-  @Column(name = "password")
-  private String password;
+  @ManyToMany(mappedBy = "lfList")
+  private Set<Course> courses = new HashSet<>();
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
-      name = "teachers_lfs",
-      joinColumns = @JoinColumn(name = "teacher_Id", referencedColumnName = "teacherId"),
-      inverseJoinColumns = @JoinColumn(name = "lf_Id", referencedColumnName = "lfId"))
-  private Set<LearningField> learningFields = new HashSet<>();
+      name = "lfs_subjects",
+      joinColumns = @JoinColumn(name = "lf_Id", referencedColumnName = "lfId"),
+      inverseJoinColumns = @JoinColumn(name = "subject_Id", referencedColumnName = "subjectId"))
+  private Set<Subject> subjects = new HashSet<>();
 }
