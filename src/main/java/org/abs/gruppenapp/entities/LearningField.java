@@ -33,7 +33,7 @@ public class LearningField {
   @Column(name = "name")
   private String name;
 
-  @ManyToMany(mappedBy = "lfList")
+  @ManyToMany(mappedBy = "lf")
   private Set<Course> courses = new HashSet<>();
 
   @ManyToMany(fetch = FetchType.LAZY)

@@ -1,8 +1,6 @@
 package org.abs.gruppenapp.entities;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,7 +35,7 @@ public class Course {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "courses", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Student> students = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -45,5 +43,5 @@ public class Course {
         name = "courses_learningFields",
         joinColumns = @JoinColumn(name = "course_Id", referencedColumnName = "courseId"),
         inverseJoinColumns = @JoinColumn(name = "lf_Id", referencedColumnName = "lfId"))
-    private Set<LearningField> lfList = new HashSet<>();
+    private Set<LearningField> lf = new HashSet<>();
 }

@@ -1,10 +1,17 @@
 package org.abs.gruppenapp.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.List;
+import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
 import lombok.AllArgsConstructor;
 import org.abs.gruppenapp.entities.Course;
 import org.abs.gruppenapp.entities.LearningField;
@@ -15,9 +22,6 @@ import org.abs.gruppenapp.repository.LearningFieldRepository;
 import org.abs.gruppenapp.repository.StudentRepository;
 import org.abs.gruppenapp.repository.SubjectRepository;
 import org.springframework.stereotype.Component;
-
-import javax.swing.*;
-import java.awt.*;
 
 @Component
 @AllArgsConstructor
@@ -34,37 +38,72 @@ public class Gui extends JFrame {
 
     setTitle("GroupMaker 8");
     setSize(500, 500);
+    setLayout(new BorderLayout());
 
-    var mainPanel = createPanel();
+    var menuPanel = createPanel();
 
     var courseSelection = getCourseSelection();
-    mainPanel.add(courseSelection);
+    menuPanel.add(courseSelection);
 
-    add(mainPanel);
+    add(menuPanel, BorderLayout.NORTH);
     setVisible(true);
 
     courseSelection.addActionListener(event -> {
       var comboBox = (JComboBox<String>) event.getSource();
       System.out.println("Getting info for: " + comboBox.getSelectedItem());
 
-      var lfSelection = getLfSelection();
+      var courseSelected = (String) courseSelection.getSelectedItem();
 
-      mainPanel.removeAll();
-      mainPanel.add(courseSelection);
-      mainPanel.add(lfSelection);
-      updateMainPanel(mainPanel);
+      var lfSelection = getLfSelection(courseSelected);
+
+      menuPanel.removeAll();
+      menuPanel.add(courseSelection);
+      menuPanel.add(lfSelection);
+      updateMainPanel(menuPanel);
 
       lfSelection.addActionListener(eventLf -> {
         var comboBx = (JComboBox<String>) eventLf.getSource();
         System.out.println("Getting info for: " + comboBx.getSelectedItem());
 
-        var fachrichtungSelection = getFachrichtungSelection();
+        var lfSelected = (String) comboBx.getSelectedItem();
 
-        mainPanel.removeAll();
-        mainPanel.add(courseSelection);
-        mainPanel.add(lfSelection);
-        mainPanel.add(fachrichtungSelection);
-        updateMainPanel(mainPanel);
+        List<Subject> subject = subjectRepository.findByLearningFields_name(lfSelected);
+
+        if (subject.isEmpty()) {
+          var table = createTable(courseSelected);
+          table.setFillsViewportHeight(true);
+
+          JScrollPane scrollPane = new JScrollPane(table);
+
+          menuPanel.removeAll();
+          menuPanel.add(courseSelection);
+          menuPanel.add(lfSelection);
+          menuPanel.add(scrollPane, BorderLayout.CENTER);
+          updateMainPanel(menuPanel);
+
+        } else {
+          var fachrichtungSelection = getFachrichtungSelection(lfSelected);
+
+          menuPanel.removeAll();
+          menuPanel.add(courseSelection);
+          menuPanel.add(lfSelection);
+          menuPanel.add(fachrichtungSelection);
+          updateMainPanel(menuPanel);
+
+          fachrichtungSelection.addActionListener(fachEvent -> {
+            var table = createTable(courseSelected);
+            table.setFillsViewportHeight(true);
+
+            JScrollPane scrollPane = new JScrollPane(table);
+
+            menuPanel.removeAll();
+            menuPanel.add(courseSelection);
+            menuPanel.add(lfSelection);
+            menuPanel.add(fachrichtungSelection);
+            menuPanel.add(scrollPane, BorderLayout.CENTER);
+            updateMainPanel(menuPanel);
+          });
+        }
       });
     });
   }
@@ -81,15 +120,15 @@ public class Gui extends JFrame {
     return createComboBox(courseNames);
   }
 
-  private JComboBox<String> getLfSelection() {
-    List<LearningField> learningField = (List<LearningField>) learningFieldRepository.findAll();
-    List<String> lfNames = learningField.stream().map(LearningField::getName).toList();
+  private JComboBox<String> getLfSelection(String course) {
+    List<LearningField> learningField = learningFieldRepository.findByCourses_Name(course);
+    var lfNames = learningField.stream().map(LearningField::getName).toList();
 
     return createComboBox(lfNames);
   }
 
-  private JComboBox<String> getFachrichtungSelection() {
-    List<Subject> subject = (List<Subject>) subjectRepository.findAll();
+  private JComboBox<String> getFachrichtungSelection(String lf) {
+    List<Subject> subject = subjectRepository.findByLearningFields_name(lf);
     List<String> subjectNames = subject.stream().map(Subject::getName).toList();
 
     return createComboBox(subjectNames);
@@ -105,12 +144,32 @@ public class Gui extends JFrame {
     JComboBox<String> comboBox = new JComboBox<>();
     if (items.isEmpty()) {
       comboBox.addItem("no course found");
-//      comboBox.setModel(new DefaultComboBoxModel<>(items.toArray(new String[0])));
     } else {
       comboBox.setModel(new DefaultComboBoxModel<>(items.toArray(new String[0])));
       comboBox.setSelectedIndex(0);
     }
-
     return comboBox;
+  }
+
+  private JTable createTable(String course) {
+    JTable table = new JTable();
+    DefaultTableModel model = new DefaultTableModel();
+
+    String[] columnNames = {"No", "Nachname", "Vorname", "Leistung"};
+    List<Student> students = studentRepository.findByCourse_Name(course);
+
+    for (int i = 0; i < students.size(); i++) {
+      Object[] o = new Object[4];
+      o[0] = i + 1;
+      o[1] = students.get(i).getLastName();
+      o[2] = students.get(i).getFirstName();
+      o[3] = students.get(i).getEvaluation();
+      model.addRow(o);
+    }
+
+    model.setColumnIdentifiers(columnNames);
+    table.setModel(model);
+
+    return table;
   }
 }
