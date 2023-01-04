@@ -13,6 +13,6 @@ public class Application {
 
     var context = builder.run(args);
     var gui = context.getBean(Gui.class);
-    gui.classSelection();
+    gui.initialize();
   }
 }
