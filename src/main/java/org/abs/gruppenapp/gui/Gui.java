@@ -40,12 +40,12 @@ public class Gui extends JFrame {
     setSize(500, 500);
     setLayout(new BorderLayout());
 
-    var menuPanel = createPanel();
+    var mainPanel = createPanel();
 
     var courseSelection = getCourseSelection();
-    menuPanel.add(courseSelection);
+    mainPanel.add(courseSelection);
 
-    add(menuPanel, BorderLayout.NORTH);
+    add(mainPanel, BorderLayout.NORTH);
     setVisible(true);
 
     courseSelection.addActionListener(event -> {
@@ -56,10 +56,7 @@ public class Gui extends JFrame {
 
       var lfSelection = getLfSelection(courseSelected);
 
-      menuPanel.removeAll();
-      menuPanel.add(courseSelection);
-      menuPanel.add(lfSelection);
-      updateMainPanel(menuPanel);
+      updateMainPanel(mainPanel, courseSelection, lfSelection);
 
       lfSelection.addActionListener(eventLf -> {
         var comboBx = (JComboBox<String>) eventLf.getSource();
@@ -75,20 +72,12 @@ public class Gui extends JFrame {
 
           JScrollPane scrollPane = new JScrollPane(table);
 
-          menuPanel.removeAll();
-          menuPanel.add(courseSelection);
-          menuPanel.add(lfSelection);
-          menuPanel.add(scrollPane, BorderLayout.CENTER);
-          updateMainPanel(menuPanel);
+          updateMainPanel(mainPanel, courseSelection, lfSelection, scrollPane);
 
         } else {
           var fachrichtungSelection = getFachrichtungSelection(lfSelected);
 
-          menuPanel.removeAll();
-          menuPanel.add(courseSelection);
-          menuPanel.add(lfSelection);
-          menuPanel.add(fachrichtungSelection);
-          updateMainPanel(menuPanel);
+          updateMainPanel(mainPanel, courseSelection, lfSelection, fachrichtungSelection);
 
           fachrichtungSelection.addActionListener(fachEvent -> {
             var table = createTable(courseSelected);
@@ -96,19 +85,20 @@ public class Gui extends JFrame {
 
             JScrollPane scrollPane = new JScrollPane(table);
 
-            menuPanel.removeAll();
-            menuPanel.add(courseSelection);
-            menuPanel.add(lfSelection);
-            menuPanel.add(fachrichtungSelection);
-            menuPanel.add(scrollPane, BorderLayout.CENTER);
-            updateMainPanel(menuPanel);
+            updateMainPanel(mainPanel, courseSelection, lfSelection, fachrichtungSelection, scrollPane);
           });
         }
       });
     });
   }
 
-  private void updateMainPanel(JPanel mainPanel) {
+  private void updateMainPanel(JPanel mainPanel, java.awt.Component... elements) {
+    mainPanel.removeAll();
+
+    for (java.awt.Component o : elements){
+      mainPanel.add(o);
+    }
+
     mainPanel.revalidate();
     mainPanel.repaint();
   }
@@ -143,7 +133,7 @@ public class Gui extends JFrame {
   private JComboBox<String> createComboBox(List<String> items) {
     JComboBox<String> comboBox = new JComboBox<>();
     if (items.isEmpty()) {
-      comboBox.addItem("no course found");
+      comboBox.addItem("data not found");
     } else {
       comboBox.setModel(new DefaultComboBoxModel<>(items.toArray(new String[0])));
       comboBox.setSelectedIndex(0);
