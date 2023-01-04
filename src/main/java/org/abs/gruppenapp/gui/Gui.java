@@ -1,6 +1,7 @@
 package org.abs.gruppenapp.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -11,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import lombok.AllArgsConstructor;
 import org.abs.gruppenapp.entities.Student;
 import org.abs.gruppenapp.services.DatabaseService;
@@ -39,23 +41,17 @@ public class Gui extends JFrame {
     setVisible(true);
 
     courseSelection.addActionListener(event -> {
-      var comboBox = (JComboBox<String>) event.getSource();
-      System.out.println("Getting info for: " + comboBox.getSelectedItem());
-
       var courseSelected = (String) courseSelection.getSelectedItem();
       var lfSelection = getLfSelection(courseSelected);
 
       updateMainPanel(mainPanel, courseSelection, lfSelection);
 
       lfSelection.addActionListener(eventLf -> {
-        var comboBx = (JComboBox<String>) eventLf.getSource();
-        System.out.println("Getting info for: " + comboBx.getSelectedItem());
-
-        var lfSelected = (String) comboBx.getSelectedItem();
+        var lfSelected = (String) lfSelection.getSelectedItem();
         List<String> subject = databaseService.getFachrichtungByLfName(lfSelected);
 
         if (subject.isEmpty()) {
-          var table = createTable(courseSelected);
+          var table = createTable(courseSelected, null);
           table.setFillsViewportHeight(true);
           JScrollPane scrollPane = new JScrollPane(table);
 
@@ -67,7 +63,9 @@ public class Gui extends JFrame {
           updateMainPanel(mainPanel, courseSelection, lfSelection, fachrichtungSelection);
 
           fachrichtungSelection.addActionListener(fachEvent -> {
-            var table = createTable(courseSelected);
+            var subjectSelected = (String) fachrichtungSelection.getSelectedItem();
+
+            var table = createTable(courseSelected, subjectSelected);
             table.setFillsViewportHeight(true);
             JScrollPane scrollPane = new JScrollPane(table);
 
@@ -121,12 +119,25 @@ public class Gui extends JFrame {
     return comboBox;
   }
 
-  private JTable createTable(String courseName) {
+  private JTable createTable(String courseName, String subjectName) {
     JTable table = new JTable();
     DefaultTableModel model = new DefaultTableModel();
 
+    JTableHeader header = table.getTableHeader();
+    header.setBackground(Color.yellow);
+    table.setGridColor(Color.GRAY);
+
     String[] columnNames = {"No", "Nachname", "Vorname", "Leistung"};
-    List<Student> students = databaseService.getStudentsByCourseName(courseName);
+    model.setColumnIdentifiers(columnNames);
+    table.setModel(model);
+
+    List<Student> students;
+
+    if (subjectName == null) {
+      students = databaseService.getStudentsByCourseName(courseName);
+    } else {
+      students = databaseService.getStudentsByCourseNameAndSubject(courseName, subjectName);
+    }
 
     for (int i = 0; i < students.size(); i++) {
       Object[] o = new Object[4];
@@ -136,10 +147,6 @@ public class Gui extends JFrame {
       o[3] = students.get(i).getEvaluation();
       model.addRow(o);
     }
-
-    model.setColumnIdentifiers(columnNames);
-    table.setModel(model);
-
     return table;
   }
 }

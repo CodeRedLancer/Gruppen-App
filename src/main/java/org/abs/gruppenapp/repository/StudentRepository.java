@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface StudentRepository extends CrudRepository<Student, Long> {
 
   List<Student> findByCourse_Name(@Param("course") String course);
+
+  List<Student> findByCourse_NameAndSubject_Name(String course, String subject);
 }

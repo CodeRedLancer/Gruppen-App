@@ -40,4 +40,8 @@ public class DatabaseService {
   public List<Student> getStudentsByCourseName(String courseName) {
     return studentRepository.findByCourse_Name(courseName);
   }
+
+  public List<Student> getStudentsByCourseNameAndSubject(String courseName, String subject) {
+    return studentRepository.findByCourse_NameAndSubject_Name(courseName, subject);
+  }
 }
