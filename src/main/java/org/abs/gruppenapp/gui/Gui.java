@@ -3,7 +3,6 @@ package org.abs.gruppenapp.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.List;
-import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -13,24 +12,15 @@ import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import lombok.AllArgsConstructor;
-import org.abs.gruppenapp.entities.Course;
-import org.abs.gruppenapp.entities.LearningField;
 import org.abs.gruppenapp.entities.Student;
-import org.abs.gruppenapp.entities.Subject;
-import org.abs.gruppenapp.repository.CourseRepository;
-import org.abs.gruppenapp.repository.LearningFieldRepository;
-import org.abs.gruppenapp.repository.StudentRepository;
-import org.abs.gruppenapp.repository.SubjectRepository;
+import org.abs.gruppenapp.services.DatabaseService;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class Gui extends JFrame {
 
-  private final CourseRepository courseRepository;
-  private final LearningFieldRepository learningFieldRepository;
-  private final SubjectRepository subjectRepository;
-  private final StudentRepository studentRepository;
+  private final DatabaseService databaseService;
 
 
   public void initialize() {
@@ -53,7 +43,6 @@ public class Gui extends JFrame {
       System.out.println("Getting info for: " + comboBox.getSelectedItem());
 
       var courseSelected = (String) courseSelection.getSelectedItem();
-
       var lfSelection = getLfSelection(courseSelected);
 
       updateMainPanel(mainPanel, courseSelection, lfSelection);
@@ -63,13 +52,11 @@ public class Gui extends JFrame {
         System.out.println("Getting info for: " + comboBx.getSelectedItem());
 
         var lfSelected = (String) comboBx.getSelectedItem();
-
-        List<Subject> subject = subjectRepository.findByLearningFields_name(lfSelected);
+        List<String> subject = databaseService.getFachrichtungByLfName(lfSelected);
 
         if (subject.isEmpty()) {
           var table = createTable(courseSelected);
           table.setFillsViewportHeight(true);
-
           JScrollPane scrollPane = new JScrollPane(table);
 
           updateMainPanel(mainPanel, courseSelection, lfSelection, scrollPane);
@@ -82,7 +69,6 @@ public class Gui extends JFrame {
           fachrichtungSelection.addActionListener(fachEvent -> {
             var table = createTable(courseSelected);
             table.setFillsViewportHeight(true);
-
             JScrollPane scrollPane = new JScrollPane(table);
 
             updateMainPanel(mainPanel, courseSelection, lfSelection, fachrichtungSelection, scrollPane);
@@ -95,7 +81,7 @@ public class Gui extends JFrame {
   private void updateMainPanel(JPanel mainPanel, java.awt.Component... elements) {
     mainPanel.removeAll();
 
-    for (java.awt.Component o : elements){
+    for (java.awt.Component o : elements) {
       mainPanel.add(o);
     }
 
@@ -104,23 +90,17 @@ public class Gui extends JFrame {
   }
 
   private JComboBox<String> getCourseSelection() {
-    List<Course> courses = (List<Course>) courseRepository.findAll();
-    List<String> courseNames = courses.stream().map(Course::getName).toList();
-
+    List<String> courseNames = databaseService.getAllCourses();
     return createComboBox(courseNames);
   }
 
-  private JComboBox<String> getLfSelection(String course) {
-    List<LearningField> learningField = learningFieldRepository.findByCourses_Name(course);
-    var lfNames = learningField.stream().map(LearningField::getName).toList();
-
+  private JComboBox<String> getLfSelection(String courseName) {
+    var lfNames = databaseService.getLfByCourseName(courseName);
     return createComboBox(lfNames);
   }
 
-  private JComboBox<String> getFachrichtungSelection(String lf) {
-    List<Subject> subject = subjectRepository.findByLearningFields_name(lf);
-    List<String> subjectNames = subject.stream().map(Subject::getName).toList();
-
+  private JComboBox<String> getFachrichtungSelection(String lfName) {
+    List<String> subjectNames = databaseService.getFachrichtungByLfName(lfName);
     return createComboBox(subjectNames);
   }
 
@@ -141,12 +121,12 @@ public class Gui extends JFrame {
     return comboBox;
   }
 
-  private JTable createTable(String course) {
+  private JTable createTable(String courseName) {
     JTable table = new JTable();
     DefaultTableModel model = new DefaultTableModel();
 
     String[] columnNames = {"No", "Nachname", "Vorname", "Leistung"};
-    List<Student> students = studentRepository.findByCourse_Name(course);
+    List<Student> students = databaseService.getStudentsByCourseName(courseName);
 
     for (int i = 0; i < students.size(); i++) {
       Object[] o = new Object[4];
