@@ -29,19 +29,16 @@ public class Gui extends JFrame {
   private final StudentRepository studentRepository;
 
 
-  public void initialize(){
+  public void initialize() {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     setTitle("GroupMaker 8");
     setSize(500, 500);
 
     var mainPanel = createPanel();
-    var courseSelectionPanel = createPanel();
-    var lfSelectionPanel = createPanel();
 
     var courseSelection = getCourseSelection();
-    courseSelectionPanel.add(courseSelection);
-    mainPanel.add(courseSelectionPanel);
+    mainPanel.add(courseSelection);
 
     add(mainPanel);
     setVisible(true);
@@ -51,65 +48,57 @@ public class Gui extends JFrame {
       System.out.println("Getting info for: " + comboBox.getSelectedItem());
 
       var lfSelection = getLfSelection();
-      lfSelectionPanel.removeAll();
-      lfSelectionPanel.add(lfSelection);
 
-      mainPanel.remove(lfSelectionPanel);
-      mainPanel.remove(courseSelectionPanel);
-      mainPanel.add(courseSelectionPanel);
-      mainPanel.add(lfSelectionPanel);
-      mainPanel.revalidate();
-      mainPanel.repaint();
-//      setVisible(true);
+      mainPanel.removeAll();
+      mainPanel.add(courseSelection);
+      mainPanel.add(lfSelection);
+      updateMainPanel(mainPanel);
+
+      lfSelection.addActionListener(eventLf -> {
+        var comboBx = (JComboBox<String>) eventLf.getSource();
+        System.out.println("Getting info for: " + comboBx.getSelectedItem());
+
+        var fachrichtungSelection = getFachrichtungSelection();
+
+        mainPanel.removeAll();
+        mainPanel.add(courseSelection);
+        mainPanel.add(lfSelection);
+        mainPanel.add(fachrichtungSelection);
+        updateMainPanel(mainPanel);
+      });
     });
-
-
-
-
-
-
   }
 
-  private JComboBox<String> getCourseSelection(){
+  private void updateMainPanel(JPanel mainPanel) {
+    mainPanel.revalidate();
+    mainPanel.repaint();
+  }
+
+  private JComboBox<String> getCourseSelection() {
     List<Course> courses = (List<Course>) courseRepository.findAll();
     List<String> courseNames = courses.stream().map(Course::getName).toList();
 
     return createComboBox(courseNames);
   }
 
-  private JComboBox<String> getLfSelection(){
+  private JComboBox<String> getLfSelection() {
     List<LearningField> learningField = (List<LearningField>) learningFieldRepository.findAll();
     List<String> lfNames = learningField.stream().map(LearningField::getName).toList();
 
     return createComboBox(lfNames);
   }
 
+  private JComboBox<String> getFachrichtungSelection() {
+    List<Subject> subject = (List<Subject>) subjectRepository.findAll();
+    List<String> subjectNames = subject.stream().map(Subject::getName).toList();
+
+    return createComboBox(subjectNames);
+  }
+
   private JPanel createPanel() {
     var panel = new JPanel();
     panel.setLayout(new FlowLayout(FlowLayout.LEFT));
     return panel;
-  }
-
-  private void lfSelection(JPanel panel) {
-
-//    panel.add(lfSelection);
-//    updateFrame(panel);
-//
-//    lfSelection.addActionListener(event -> {
-//      var comboBox = (JComboBox<String>) event.getSource();
-//      System.out.println("Getting info for: " + comboBox.getSelectedItem());
-//      fachrichtungSelection(panel);
-//    });
-  }
-
-  private void fachrichtungSelection(JPanel panel) {
-    List<Subject> subject = (List<Subject>) subjectRepository.findAll();
-    List<String> subjectNames = subject.stream().map(Subject::getName).toList();
-
-    var fachrichtungSelection = createComboBox(subjectNames);
-
-    panel.add(fachrichtungSelection);
-    updateFrame(panel);
   }
 
   private JComboBox<String> createComboBox(List<String> items) {
@@ -123,18 +112,5 @@ public class Gui extends JFrame {
     }
 
     return comboBox;
-  }
-
-  private void updateFrame(JPanel panel) {
-    getContentPane().add(panel);
-//    add(panel);
-    setVisible(true);
-  }
-
-  private String getStudent(){
-    var student = (List<Student>) studentRepository.findAll();
-
-    return student.get(0).getFirstName();
-
   }
 }
