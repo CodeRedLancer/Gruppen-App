@@ -113,7 +113,6 @@ public class Gui extends JFrame {
 
     var klasseBearbeitenBtn = new JButton("Klasse bearbeiten");
     var gruppeErstellenBtn = new JButton("Gruppe erstellen");
-    JFrame newFrame = new JFrame();
 
     List<StudentToGroup> studentsToGroup = new ArrayList<>();
 
@@ -128,20 +127,8 @@ public class Gui extends JFrame {
         }
       }
 
-      JFrame frame = this;
-      frame.setEnabled(false);
+      studentsToGroup.forEach(student -> System.out.println(student.getFirstName() + " " + student.getLastName()));
 
-      newFrame.setTitle("new frame");
-      newFrame.setSize(500, 500);
-      newFrame.setVisible(true);
-      newFrame.setLocationRelativeTo(this);
-
-      newFrame.addWindowListener(new WindowAdapter() {
-        @Override
-        public void windowClosed(WindowEvent e) {
-          frame.setEnabled(true);
-        }
-      });
     });
 
     getStudentsList(studentsToGroup);
