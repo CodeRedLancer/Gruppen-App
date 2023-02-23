@@ -3,8 +3,7 @@ package org.abs.gruppenapp.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -15,11 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.abs.gruppenapp.entities.Student;
 import org.abs.gruppenapp.entities.StudentToGroup;
 import org.abs.gruppenapp.services.DatabaseService;
@@ -38,6 +36,7 @@ public class Gui extends JFrame {
     setTitle("GroupMaker 8");
     setSize(500, 500);
     setLayout(new BorderLayout());
+
 
     var mainPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     var downPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
