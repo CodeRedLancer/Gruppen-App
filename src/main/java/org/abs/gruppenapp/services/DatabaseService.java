@@ -2,7 +2,6 @@ package org.abs.gruppenapp.services;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.abs.gruppenapp.entities.Course;
 import org.abs.gruppenapp.entities.LearningField;
 import org.abs.gruppenapp.entities.Student;
