@@ -23,8 +23,6 @@ import lombok.Setter;
 @Table(name = "course_table")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Course {
 
     @Id
@@ -44,4 +42,36 @@ public class Course {
         joinColumns = @JoinColumn(name = "course_Id", referencedColumnName = "courseId"),
         inverseJoinColumns = @JoinColumn(name = "lf_Id", referencedColumnName = "lfId"))
     private Set<LearningField> lf = new HashSet<>();
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
+
+    public Set<LearningField> getLf() {
+        return lf;
+    }
+
+    public void setLf(Set<LearningField> lf) {
+        this.lf = lf;
+    }
 }

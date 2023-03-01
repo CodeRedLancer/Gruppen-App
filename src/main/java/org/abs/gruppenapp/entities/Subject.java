@@ -19,8 +19,6 @@ import lombok.Setter;
 @Table(name = "subject_table")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Subject {
 
   @Id
@@ -36,4 +34,36 @@ public class Subject {
 
   @ManyToMany(mappedBy = "subjects")
   private Set<LearningField> learningFields = new HashSet<>();
+
+  public int getSubjectId() {
+    return subjectId;
+  }
+
+  public void setSubjectId(int subjectId) {
+    this.subjectId = subjectId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Set<Student> getStudents() {
+    return students;
+  }
+
+  public void setStudents(Set<Student> students) {
+    this.students = students;
+  }
+
+  public Set<LearningField> getLearningFields() {
+    return learningFields;
+  }
+
+  public void setLearningFields(Set<LearningField> learningFields) {
+    this.learningFields = learningFields;
+  }
 }

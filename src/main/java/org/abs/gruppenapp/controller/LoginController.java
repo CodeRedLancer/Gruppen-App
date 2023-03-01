@@ -1,4 +1,4 @@
-package com.example.javafxgui;
+package org.abs.gruppenapp.controller;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
