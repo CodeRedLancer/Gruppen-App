@@ -1,6 +1,5 @@
 package org.abs.gruppenapp;
 
-import org.abs.gruppenapp.gui.Gui;
 import org.abs.gruppenapp.gui.Login;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -13,7 +12,6 @@ public class Application {
     builder.headless(false);
 
     var context = builder.run(args);
-//    var gui = context.getBean(Gui.class);
     var gui = context.getBean(Login.class);
     gui.initialize();
   }

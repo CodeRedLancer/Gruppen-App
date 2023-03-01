@@ -1,33 +1,26 @@
 package org.abs.gruppenapp.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import lombok.AllArgsConstructor;
-import org.abs.gruppenapp.Application;
-import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.abs.gruppenapp.services.DatabaseService;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class Login extends JFrame {
 
-  public static void main(String[] args) {
-
-  }
-
+  private final DatabaseService databaseService;
 
   public void initialize() {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -38,11 +31,14 @@ public class Login extends JFrame {
     JPanel panel = new JPanel(new GridLayout(3, 1));
     panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-    JPanel panelForBtn = new JPanel(new FlowLayout());
-    panelForBtn.setBorder(new EmptyBorder(10, 10, 10, 10));
+    JPanel panelForBtn = new JPanel(new GridLayout(2, 1));
+    panelForBtn.setBorder(new EmptyBorder(10, 50, 10, 50));
 
-    JPanel panelForLabel = new JPanel(new FlowLayout());
-    panelForLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
+    JPanel panelLoginLabel = new JPanel(new FlowLayout());
+    panelLoginLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+    JPanel panelErrorLabel = new JPanel(new FlowLayout());
+    panelErrorLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
     JLabel nameLabel = new JLabel("Username");
     JTextField nameTextField = new JTextField();
@@ -51,36 +47,42 @@ public class Login extends JFrame {
     JButton confirmBtn = new JButton("LOGIN");
     confirmBtn.setSize(20, 10);
     JLabel loginLabel = new JLabel("Melden Sie sich ein");
+    JLabel errorLabel = new JLabel();
+    errorLabel.setForeground(Color.red);
 
     panel.add(nameLabel);
     panel.add(nameTextField);
     panel.add(passwordLabel);
     panel.add(passwordTextField);
 
+    panelLoginLabel.add(loginLabel);
     panelForBtn.add(confirmBtn);
-    panelForLabel.add(loginLabel);
+    panelForBtn.add(errorLabel);
 
+    add(panelLoginLabel, BorderLayout.NORTH);
     add(panel, BorderLayout.CENTER);
     add(panelForBtn, BorderLayout.SOUTH);
-    add(panelForLabel, BorderLayout.NORTH);
 
     setVisible(true);
 
     confirmBtn.addActionListener(e -> {
+      errorLabel.setText(null);
       var username = nameTextField.getText();
       var password = new String(passwordTextField.getPassword());
 
       if (username.equals("admin") && password.equals("1234")) {
-        System.out.println("Login successful!");
-
-   
+        openMainWindow();
       } else {
-        System.out.println("Wrong username or password");
+        errorLabel.setText("Wrong username or password");
       }
-
-
     });
+  }
 
+  private void openMainWindow() {
+    Gui gui = new Gui(databaseService);
+    gui.setVisible(true);
+    gui.initialize();
+    setVisible(false);
   }
 
 }
