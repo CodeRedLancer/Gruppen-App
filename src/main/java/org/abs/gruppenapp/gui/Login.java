@@ -71,7 +71,9 @@ public class Login extends JFrame {
       var password = new String(passwordTextField.getPassword());
 
       if (username.equals("admin") && password.equals("1234")) {
-        openMainWindow();
+//        openMainWindow();
+        openDashboard();
+
       } else {
         errorLabel.setText("Wrong username or password");
       }
@@ -84,5 +86,13 @@ public class Login extends JFrame {
     gui.initialize();
     setVisible(false);
   }
+
+  private void openDashboard() {
+    Dashboard dashboard = new Dashboard(databaseService);
+    dashboard.setVisible(true);
+    dashboard.initialize();
+    setVisible(false);
+  }
+
 
 }
