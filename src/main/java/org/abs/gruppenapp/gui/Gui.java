@@ -3,8 +3,6 @@ package org.abs.gruppenapp.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -15,8 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import lombok.AllArgsConstructor;
@@ -28,9 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class Gui extends JFrame {
-
   private final DatabaseService databaseService;
-
 
   public void initialize() {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -90,6 +84,7 @@ public class Gui extends JFrame {
       });
     });
   }
+
 
   private void updateMainPanel(JPanel mainPanel, java.awt.Component... elements) {
     mainPanel.removeAll();

@@ -1,11 +1,17 @@
 package org.abs.gruppenapp.services;
 
 import org.abs.gruppenapp.entities.Student;
+import org.abs.gruppenapp.repository.StudentRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class StudentService {
 
-    public void addStudent(Student student) {
+    private StudentRepository studentRepository;
 
+
+    public void addStudent(Student student) {
+        studentRepository.save(student);
         System.out.println("Add User");
     }
 
