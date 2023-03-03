@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class StudentManager extends JFrame {
+public class DashboardTeacher extends JFrame {
 
   private final DatabaseService databaseService;
 

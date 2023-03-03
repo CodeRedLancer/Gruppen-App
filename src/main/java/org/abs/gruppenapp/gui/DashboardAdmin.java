@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class Dashboard extends JFrame {
+public class DashboardAdmin extends JFrame {
 
   private final DatabaseService databaseService;
 
@@ -29,10 +29,10 @@ public class Dashboard extends JFrame {
     var mainPanel = new JPanel(new GridLayout(3, 1));
     mainPanel.setBorder(new EmptyBorder(10, 50, 10, 50));
 
+    JButton logoutBtn = new JButton("Ausloggen");
     JButton teacherBtn = new JButton("Lehrer verwalten");
     JButton classBtn = new JButton("Klassen verwalten");
     JButton studentBtn = new JButton("Schüler verwalten");
-    JButton logoutBtn = new JButton("Ausloggen");
 
     loginPanel.add(logoutBtn);
     mainPanel.add(teacherBtn);
@@ -59,23 +59,23 @@ public class Dashboard extends JFrame {
   }
 
   private void openTeacherManager(){
-    TeacherManager teacherManager= new TeacherManager();
+    TeacherManager teacherManager= new TeacherManager(databaseService);
     teacherManager.setVisible(true);
-//    teacherManager.initialize();
+    teacherManager.initialize();
     setVisible(false);
   }
 
   private void openClassManager(){
-    ClassManager classManager = new ClassManager();
+    ClassManager classManager = new ClassManager(databaseService);
     classManager.setVisible(true);
-//    classManager.initialize();
+    classManager.initialize();
     setVisible(false);
   }
 
   private void openStudentManager(){
-    StudentManager studentManager = new StudentManager();
+    StudentManager studentManager = new StudentManager(databaseService);
     studentManager.setVisible(true);
-//    studentManager.initialize();
+    studentManager.initialize();
     setVisible(false);
   }
 

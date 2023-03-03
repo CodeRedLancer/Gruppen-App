@@ -72,8 +72,9 @@ public class Login extends JFrame {
 
       if (username.equals("admin") && password.equals("1234")) {
 //        openMainWindow();
-        openDashboard();
-
+        openDashboardAdmin();
+      } else if (username.equals("teacher") && password.equals("teacher")) {
+        openDashboardTeacher();
       } else {
         errorLabel.setText("Wrong username or password");
       }
@@ -87,10 +88,17 @@ public class Login extends JFrame {
     setVisible(false);
   }
 
-  private void openDashboard() {
-    Dashboard dashboard = new Dashboard(databaseService);
-    dashboard.setVisible(true);
-    dashboard.initialize();
+  private void openDashboardAdmin() {
+    DashboardAdmin dashboardAdmin = new DashboardAdmin(databaseService);
+    dashboardAdmin.setVisible(true);
+    dashboardAdmin.initialize();
+    setVisible(false);
+  }
+
+  private void openDashboardTeacher() {
+    DashboardTeacher dashboardTeacher = new DashboardTeacher(databaseService);
+    dashboardTeacher.setVisible(true);
+    dashboardTeacher.initialize();
     setVisible(false);
   }
 
