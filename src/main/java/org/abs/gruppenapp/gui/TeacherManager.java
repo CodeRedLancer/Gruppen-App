@@ -101,7 +101,6 @@ public class TeacherManager extends JFrame {
 
       var teacher = databaseService.findTeacherByID(Integer.parseInt(teacherId));
 
-
       var frame = createTeacherForm(teacher.get());
       frame.setVisible(true);
     });
@@ -111,7 +110,7 @@ public class TeacherManager extends JFrame {
           var value = table.getValueAt(rowNum, 0).toString();
           model.removeRow(rowNum);
           databaseService.removeTeacher(Integer.parseInt(value));
-          model.fireTableDataChanged();
+          reloadFrame();
         }
     );
 
@@ -140,7 +139,7 @@ public class TeacherManager extends JFrame {
     setVisible(false);
   }
 
-  public void reloadFrame(){
+  public void reloadFrame() {
     TeacherManager teacherManager = new TeacherManager(databaseService);
     teacherManager.setVisible(true);
     teacherManager.initialize();
