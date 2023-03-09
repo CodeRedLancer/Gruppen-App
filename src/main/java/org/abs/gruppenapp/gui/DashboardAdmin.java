@@ -48,10 +48,9 @@ public class DashboardAdmin extends JFrame {
     teacherBtn.addActionListener(a -> openTeacherManager());
     classBtn.addActionListener(a -> openClassManager());
     studentBtn.addActionListener(a -> openStudentManager());
-
   }
 
-  private void logout(){
+  public void logout(){
     Login login = new Login(databaseService);
     login.setVisible(true);
     login.initialize();
@@ -78,9 +77,5 @@ public class DashboardAdmin extends JFrame {
     studentManager.initialize();
     setVisible(false);
   }
-
-
-
-
 
 }

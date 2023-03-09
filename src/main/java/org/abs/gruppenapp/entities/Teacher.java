@@ -1,6 +1,8 @@
 package org.abs.gruppenapp.entities;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,5 +46,5 @@ public class Teacher {
       name = "teachers_lfs",
       joinColumns = @JoinColumn(name = "teacher_Id", referencedColumnName = "teacherId"),
       inverseJoinColumns = @JoinColumn(name = "lf_Id", referencedColumnName = "lfId"))
-  private Set<LearningField> learningFields = new HashSet<>();
+  private List<LearningField> learningFields = new ArrayList<>();
 }
