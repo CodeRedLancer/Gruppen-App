@@ -13,7 +13,6 @@ import org.abs.gruppenapp.repository.LearningFieldRepository;
 import org.abs.gruppenapp.repository.StudentRepository;
 import org.abs.gruppenapp.repository.SubjectRepository;
 import org.abs.gruppenapp.repository.TeacherRepository;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,6 +29,15 @@ public class DatabaseService {
   public List<String> getAllCourses() {
     List<Course> courses = (List<Course>) courseRepository.findAll();
     return courses.stream().map(Course::getName).toList();
+  }
+
+  public void saveCourse(Course course){
+    courseRepository.save(course);
+  }
+
+  public List<String> getAllLearningFields(){
+    List<LearningField> learningFields = (List<LearningField>) learningFieldRepository.findAll();
+    return learningFields.stream().map(LearningField::getName).toList();
   }
 
   public List<String> getLfByCourseName(String courseName) {
