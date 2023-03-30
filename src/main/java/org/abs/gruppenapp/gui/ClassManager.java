@@ -34,6 +34,7 @@ public class ClassManager extends JFrame {
     setTitle("GroupMaker 8");
     setSize(500, 500);
     setLayout(new BorderLayout());
+    setLocationRelativeTo(null);
 
     var loginPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     var mainPanel = new JPanel(new BorderLayout());
@@ -52,7 +53,6 @@ public class ClassManager extends JFrame {
     deleteLfBtn.setEnabled(false);
 
     var classSelection = getClasses();
-
     checkboxPanel.add(classSelection);
 
     loginPanel.add(logoutBtn);
@@ -93,6 +93,7 @@ public class ClassManager extends JFrame {
 
     addClassBtn.addActionListener(a -> {
       var frame = createClassForm();
+      frame.setLocationRelativeTo(null);
       frame.setVisible(true);
     });
 

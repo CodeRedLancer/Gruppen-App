@@ -32,6 +32,7 @@ public class Gui extends JFrame {
     setTitle("GroupMaker 8");
     setSize(500, 500);
     setLayout(new BorderLayout());
+    setLocationRelativeTo(null);
 
     var mainPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     var downPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

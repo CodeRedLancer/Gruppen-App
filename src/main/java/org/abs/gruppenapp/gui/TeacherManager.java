@@ -34,6 +34,7 @@ public class TeacherManager extends JFrame {
     setTitle("GroupMaker 8");
     setSize(500, 500);
     setLayout(new BorderLayout());
+    setLocationRelativeTo(null);
 
     var loginPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     var mainPanel = new JPanel(new BorderLayout());
@@ -92,6 +93,7 @@ public class TeacherManager extends JFrame {
 
     addTeacherBtn.addActionListener(a -> {
       var frame = createTeacherForm();
+      frame.setLocationRelativeTo(null);
       frame.setVisible(true);
     });
 
@@ -102,6 +104,7 @@ public class TeacherManager extends JFrame {
       var teacher = databaseService.findTeacherByID(Integer.parseInt(teacherId));
 
       var frame = createTeacherForm(teacher.get());
+      frame.setLocationRelativeTo(null);
       frame.setVisible(true);
     });
 
@@ -159,6 +162,7 @@ public class TeacherManager extends JFrame {
     frame.setTitle("GroupMaker 8");
     frame.setSize(500, 250);
     frame.setLayout(new BorderLayout());
+    setLocationRelativeTo(null);
 
     JPanel panel = new JPanel(new GridLayout(3, 1));
     panel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -192,6 +196,7 @@ public class TeacherManager extends JFrame {
       teacher.setFirstName(firstname);
 
       databaseService.saveTeacher(teacher);
+      frame.setLocationRelativeTo(null);
       frame.setVisible(false);
       reloadFrame();
     });
@@ -239,6 +244,7 @@ public class TeacherManager extends JFrame {
       teacher.setFirstName(firstname);
 
       databaseService.saveTeacher(teacher);
+      frame.setLocationRelativeTo(null);
       frame.setVisible(false);
       reloadFrame();
     });

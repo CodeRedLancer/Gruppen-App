@@ -24,6 +24,7 @@ public class DashboardAdmin extends JFrame {
     setTitle("GroupMaker 8");
     setSize(500, 500);
     setLayout(new BorderLayout());
+    setLocationRelativeTo(null);
 
     var loginPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     var mainPanel = new JPanel(new GridLayout(3, 1));
@@ -61,6 +62,7 @@ public class DashboardAdmin extends JFrame {
     TeacherManager teacherManager= new TeacherManager(databaseService);
     teacherManager.setVisible(true);
     teacherManager.initialize();
+    setLocationRelativeTo(null);
     setVisible(false);
   }
 
@@ -68,6 +70,7 @@ public class DashboardAdmin extends JFrame {
     ClassManager classManager = new ClassManager(databaseService);
     classManager.setVisible(true);
     classManager.initialize();
+    setLocationRelativeTo(null);
     setVisible(false);
   }
 
@@ -75,6 +78,7 @@ public class DashboardAdmin extends JFrame {
     StudentManager studentManager = new StudentManager(databaseService);
     studentManager.setVisible(true);
     studentManager.initialize();
+    setLocationRelativeTo(null);
     setVisible(false);
   }
 

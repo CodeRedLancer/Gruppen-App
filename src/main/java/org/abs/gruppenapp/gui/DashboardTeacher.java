@@ -24,16 +24,19 @@ public class DashboardTeacher extends JFrame {
     setTitle("GroupMaker 8");
     setSize(500, 500);
     setLayout(new BorderLayout());
+    setLocationRelativeTo(null);
 
     var loginPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     var mainPanel = new JPanel(new GridLayout(3, 1));
     mainPanel.setBorder(new EmptyBorder(10, 50, 10, 50));
 
     JButton logoutBtn = new JButton("Ausloggen");
+    JButton groupBtn = new JButton("Gruppen erstellen");
     JButton classBtn = new JButton("Klassen verwalten");
     JButton studentBtn = new JButton("Schüler verwalten");
 
     loginPanel.add(logoutBtn);
+    mainPanel.add(groupBtn);
     mainPanel.add(classBtn);
     mainPanel.add(studentBtn);
 

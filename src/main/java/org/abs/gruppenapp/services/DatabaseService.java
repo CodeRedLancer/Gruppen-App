@@ -78,4 +78,21 @@ public class DatabaseService {
       System.out.printf("Teacher with id %d was not found", id);
     }
   }
+
+  public Optional<Student> findStudentByID(int id) {
+    return studentRepository.findByStudentId(id);
+  }
+
+  public void saveStudent(Student student){
+    studentRepository.save(student);
+  }
+
+  public void removeStudent(int id){
+    var student = studentRepository.findByStudentId(id);
+    if (student.isPresent()) {
+      studentRepository.delete(student.get());
+    } else {
+      System.out.printf("Student with id %d was not found", id);
+    }
+  }
 }
