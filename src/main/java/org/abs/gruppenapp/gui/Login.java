@@ -26,7 +26,8 @@ public class Login extends JFrame {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     setTitle("GroupMaker 8");
-    setSize(300, 250);
+    setSize(400, 250);
+    setLocationRelativeTo(null);
 
     JPanel panel = new JPanel(new GridLayout(3, 1));
     panel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -40,9 +41,9 @@ public class Login extends JFrame {
     JPanel panelErrorLabel = new JPanel(new FlowLayout());
     panelErrorLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-    JLabel nameLabel = new JLabel("Username");
+    JLabel nameLabel = new JLabel("Benutzername");
     JTextField nameTextField = new JTextField();
-    JLabel passwordLabel = new JLabel("Password");
+    JLabel passwordLabel = new JLabel("Kennwort");
     JPasswordField passwordTextField = new JPasswordField();
     JButton confirmBtn = new JButton("LOGIN");
     confirmBtn.setSize(20, 10);
@@ -71,9 +72,12 @@ public class Login extends JFrame {
       var password = new String(passwordTextField.getPassword());
 
       if (username.equals("admin") && password.equals("1234")) {
-        openMainWindow();
+//        openMainWindow();
+        openDashboardAdmin();
+      } else if (username.equals("teacher") && password.equals("teacher")) {
+        openDashboardTeacher();
       } else {
-        errorLabel.setText("Wrong username or password");
+        errorLabel.setText("Der Benutzername oder das Kennwort ist falsch");
       }
     });
   }
@@ -84,5 +88,20 @@ public class Login extends JFrame {
     gui.initialize();
     setVisible(false);
   }
+
+  private void openDashboardAdmin() {
+    DashboardAdmin dashboardAdmin = new DashboardAdmin(databaseService);
+    dashboardAdmin.setVisible(true);
+    dashboardAdmin.initialize();
+    setVisible(false);
+  }
+
+  private void openDashboardTeacher() {
+    DashboardTeacher dashboardTeacher = new DashboardTeacher(databaseService);
+    dashboardTeacher.setVisible(true);
+    dashboardTeacher.initialize();
+    setVisible(false);
+  }
+
 
 }
