@@ -133,6 +133,11 @@ public class StudentManager extends JFrame {
     return createComboBox(courseNames);
   }
 
+  private JComboBox<String> getSubjects() {
+    List<String> subjectNames = databaseService.getAllSubjects();
+    return createComboBox(subjectNames);
+  }
+
   private JComboBox<String> createComboBox(List<String> items) {
     JComboBox<String> comboBox = new JComboBox<>();
     if (items.isEmpty()) {
@@ -192,11 +197,11 @@ public class StudentManager extends JFrame {
     JLabel firstnameLabel = new JLabel("Vorname");
     JTextField firstnameTextField = new JTextField();
     JLabel classLabel = new JLabel("Klasse");
-    JComboBox<String> classBox = new JComboBox<>();
+    JComboBox<String> classBox = getClasses();
     JLabel subjectLabel = new JLabel("Fachrichtung");
-    JComboBox<String> subjectBox = new JComboBox<>();
-    JLabel leistungLabel = new JLabel("Note");
-    JTextField leistungTextField = new JTextField();
+    JComboBox<String> subjectBox = getSubjects();
+    JLabel evaluationLabel = new JLabel("Note");
+    JTextField evaluationTextField = new JTextField();
     JButton confirmBtn = new JButton("Speichern");
     confirmBtn.setSize(20, 10);
 
@@ -208,8 +213,8 @@ public class StudentManager extends JFrame {
     panel.add(classBox);
     panel.add(subjectLabel);
     panel.add(subjectBox);
-    panel.add(leistungLabel);
-    panel.add(leistungTextField);
+    panel.add(evaluationLabel);
+    panel.add(evaluationTextField);
 
     panelForBtn.add(confirmBtn);
 
@@ -221,7 +226,7 @@ public class StudentManager extends JFrame {
       var firstname = firstnameTextField.getText();
       var course = classBox.getSelectedItem();
       var subject = subjectBox.getSelectedItem();
-      var evaluation = leistungTextField.getText();
+      var evaluation = evaluationTextField.getText();
 
       Student student = new Student();
       student.setLastName(lastname);

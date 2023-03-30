@@ -50,6 +50,11 @@ public class DatabaseService {
     return subject.stream().map(Subject::getName).toList();
   }
 
+  public List<String> getAllSubjects() {
+    List<Subject> subject = (List<Subject>) subjectRepository.findAll();
+    return subject.stream().map(Subject::getName).toList();
+  }
+
   public List<Student> getStudentsByCourseName(String courseName) {
     return studentRepository.findByCourse_Name(courseName);
   }
