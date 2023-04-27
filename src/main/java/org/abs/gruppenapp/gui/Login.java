@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -67,6 +69,21 @@ public class Login extends JFrame {
     setVisible(true);
 
     confirmBtn.addActionListener(e -> {
+      errorLabel.setText(null);
+      var username = nameTextField.getText();
+      var password = new String(passwordTextField.getPassword());
+
+      if (username.equals("admin") && password.equals("1234")) {
+//        openMainWindow();
+        openDashboardAdmin();
+      } else if (username.equals("teacher") && password.equals("teacher")) {
+        openDashboardTeacher();
+      } else {
+        errorLabel.setText("Der Benutzername oder das Kennwort ist falsch");
+      }
+    });
+
+    passwordTextField.addActionListener(e -> {
       errorLabel.setText(null);
       var username = nameTextField.getText();
       var password = new String(passwordTextField.getPassword());
