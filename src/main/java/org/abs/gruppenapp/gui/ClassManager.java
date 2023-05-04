@@ -10,15 +10,18 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import lombok.AllArgsConstructor;
 import org.abs.gruppenapp.entities.Course;
+import org.abs.gruppenapp.entities.LearningField;
 import org.abs.gruppenapp.services.DatabaseService;
 import org.springframework.stereotype.Component;
 
@@ -28,11 +31,11 @@ public class ClassManager extends JFrame {
 
   private final DatabaseService databaseService;
 
-  public void initialize(){
+  public void initialize() {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     setTitle("GroupMaker 8");
-    setSize(500, 500);
+    setSize(800, 500);
     setLayout(new BorderLayout());
     setLocationRelativeTo(null);
 
@@ -40,7 +43,7 @@ public class ClassManager extends JFrame {
     var mainPanel = new JPanel(new BorderLayout());
     var backPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     var menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    var checkboxPanel = new JPanel(new GridLayout(1,2));
+    var checkboxPanel = new JPanel(new GridLayout(1, 2));
 
     JButton logoutBtn = new JButton("Ausloggen");
     JButton backToDashboardBtn = new JButton("Zurück zur Übersicht");
@@ -53,6 +56,8 @@ public class ClassManager extends JFrame {
     deleteLfBtn.setEnabled(false);
 
     var classSelection = getClasses();
+    classSelection.setRenderer(new MyComboBoxRenderer("Klasse"));
+    classSelection.setSelectedIndex(-1);
     checkboxPanel.add(classSelection);
 
     loginPanel.add(logoutBtn);
@@ -82,6 +87,9 @@ public class ClassManager extends JFrame {
       var courseSelected = (String) classSelection.getSelectedItem();
       var lfTable = getLFTable(courseSelected);
 
+      deleteClassBtn.setEnabled(true);
+      addLfBtn.setEnabled(true);
+
       checkboxPanel.add(classSelection);
       checkboxPanel.add(lfTable);
       checkboxPanel.revalidate();
@@ -89,6 +97,56 @@ public class ClassManager extends JFrame {
       mainPanel.add(checkboxPanel, BorderLayout.CENTER);
       mainPanel.revalidate();
       mainPanel.repaint();
+
+      deleteClassBtn.addActionListener(ad -> {
+        var courseName = (String) classSelection.getSelectedItem();
+        databaseService.removeCourse(courseName);
+        reloadFrame();
+      });
+
+      lfTable.getSelectionModel().addListSelectionListener(e -> {
+        deleteLfBtn.setEnabled(true);
+        menuPanel.revalidate();
+        menuPanel.repaint();
+        mainPanel.revalidate();
+        mainPanel.repaint();
+      });
+
+      addLfBtn.addActionListener(ac -> {
+//        var courseSelected = (String) classSelection.getSelectedItem();
+        var frame = createLFForm(courseSelected);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        var lfTable1 = getLFTable(courseSelected);
+
+        mainPanel.remove(checkboxPanel);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+        checkboxPanel.removeAll();
+        checkboxPanel.revalidate();
+        checkboxPanel.repaint();
+
+        checkboxPanel.add(classSelection);
+        checkboxPanel.add(lfTable1);
+        checkboxPanel.revalidate();
+        checkboxPanel.repaint();
+        mainPanel.add(checkboxPanel, BorderLayout.CENTER);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+      });
+
+      deleteLfBtn.addActionListener(alf -> {
+        int rowNum = lfTable.getSelectedRow();
+        var lfName = lfTable.getValueAt(rowNum, 0).toString();
+
+        Course course = databaseService.getCourseByName(courseSelected);
+        LearningField lf = databaseService.getLfListByName(lfName).get(0);
+        course.getLf().remove(lf);
+        lf.getCourses().remove(course);
+
+        reloadFrame();
+      });
     });
 
     addClassBtn.addActionListener(a -> {
@@ -120,24 +178,25 @@ public class ClassManager extends JFrame {
     return createComboBox(courseNames);
   }
 
-  private JTable getLFTable(String course){
+  private JTable getLFTable(String course) {
     JTable table = new JTable();
     table.setFillsViewportHeight(true);
     String[] columnNames = {"Lernfeld/Unterricht"};
-    DefaultTableModel model = new DefaultTableModel();
-    model.setColumnIdentifiers(columnNames);
+    DefaultTableModel lfModel = new DefaultTableModel();
+    lfModel.setColumnIdentifiers(columnNames);
     JTableHeader header = table.getTableHeader();
     header.setBackground(Color.yellow);
     table.setGridColor(Color.GRAY);
-    table.setModel(model);
-    addDataIntoTable(model);
+    table.setModel(lfModel);
+
+    addDataIntoTable(lfModel, course);
 
     return table;
   }
 
-  private void addDataIntoTable(DefaultTableModel model) {
-    Object[] row = new Object[3];
-    List<String> learningFields = databaseService.getAllLearningFields();
+  private void addDataIntoTable(DefaultTableModel model, String course) {
+    List<String> learningFields = databaseService.getLfByCourseName(course);
+    Object[] row = new Object[learningFields.size()];
 
     for (String lf : learningFields) {
       row[0] = lf;
@@ -196,11 +255,82 @@ public class ClassManager extends JFrame {
     return frame;
   }
 
+  private JFrame createLFForm(String course) {
+    JFrame frame = new JFrame();
+
+    frame.setTitle("GroupMaker 8");
+    frame.setSize(300, 250);
+    frame.setLayout(new BorderLayout());
+
+    JPanel panel = new JPanel(new GridLayout(2, 1));
+    panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+    JPanel panelForBtn = new JPanel(new GridLayout(2, 1));
+    panelForBtn.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+    JLabel lfLabel = new JLabel("Lernfeld");
+    JTextField lfTextField = new JTextField();
+    JButton confirmBtn = new JButton("Speichern");
+    confirmBtn.setSize(20, 10);
+
+    panel.add(lfLabel);
+    panel.add(lfTextField);
+
+    panelForBtn.add(confirmBtn);
+
+    frame.add(panel, BorderLayout.CENTER);
+    frame.add(panelForBtn, BorderLayout.SOUTH);
+
+    confirmBtn.addActionListener(a -> {
+      var lfName = lfTextField.getText();
+
+      LearningField lf = new LearningField();
+      lf.setName(lfName);
+
+      Course course1 = databaseService.getCourseByName(course);
+
+      lf.getCourses().add(course1);
+      course1.getLf().add(lf);
+
+      databaseService.saveLearningField(lf);
+      databaseService.saveCourse(course1);
+
+      frame.setVisible(false);
+
+      revalidate();
+      repaint();
+
+      reloadFrame();
+    });
+
+    return frame;
+  }
+
   public void reloadFrame() {
     ClassManager classManager = new ClassManager(databaseService);
     classManager.setVisible(true);
     classManager.initialize();
     setVisible(false);
+  }
+
+  class MyComboBoxRenderer extends JLabel implements ListCellRenderer {
+
+    private String _title;
+
+    public MyComboBoxRenderer(String title) {
+      _title = title;
+    }
+
+    @Override
+    public java.awt.Component getListCellRendererComponent(JList list, Object value,
+        int index, boolean isSelected, boolean hasFocus) {
+      if (index == -1 && value == null) {
+        setText(_title);
+      } else {
+        setText(value.toString());
+      }
+      return this;
+    }
   }
 
 }
