@@ -31,18 +31,40 @@ public class DatabaseService {
     return courses.stream().map(Course::getName).toList();
   }
 
-  public void saveCourse(Course course){
+  public Course getCourseByName(String courseName) {
+    List<Course> courses = courseRepository.findByName(courseName);
+    if (courses.size() > 1) {
+      throw new IllegalStateException("Many courses were found");
+    }
+    return courses.get(0);
+  }
+
+  public void saveCourse(Course course) {
     courseRepository.save(course);
   }
 
-  public List<String> getAllLearningFields(){
+  public List<String> getAllLearningFields() {
     List<LearningField> learningFields = (List<LearningField>) learningFieldRepository.findAll();
     return learningFields.stream().map(LearningField::getName).toList();
+  }
+
+  public void saveLearningField(LearningField lf){
+    learningFieldRepository.save(lf);
   }
 
   public List<String> getLfByCourseName(String courseName) {
     List<LearningField> learningField = learningFieldRepository.findByCourses_Name(courseName);
     return learningField.stream().map(LearningField::getName).toList();
+  }
+
+  public List<String> getLfByName(String name) {
+    List<LearningField> learningField = learningFieldRepository.findByName(name);
+    return learningField.stream().map(LearningField::getName).toList();
+  }
+
+  public void deleteLF(String lf) {
+    var lfFound = learningFieldRepository.findByName(lf);
+    learningFieldRepository.delete(lfFound.get(0));
   }
 
   public List<String> getFachrichtungByLfName(String lfName) {
@@ -83,16 +105,25 @@ public class DatabaseService {
     return studentRepository.findByStudentId(id);
   }
 
-  public void saveStudent(Student student){
+  public void saveStudent(Student student) {
     studentRepository.save(student);
   }
 
-  public void removeStudent(int id){
+  public void removeStudent(int id) {
     var student = studentRepository.findByStudentId(id);
     if (student.isPresent()) {
       studentRepository.delete(student.get());
     } else {
       System.out.printf("Student with id %d was not found", id);
+    }
+  }
+
+  public void removeCourse(String courseName) {
+    var course = courseRepository.findByName(courseName);
+    if (course.size() > 1) {
+      System.out.println("Many courses were found");
+    } else {
+      courseRepository.delete(course.get(0));
     }
   }
 }
