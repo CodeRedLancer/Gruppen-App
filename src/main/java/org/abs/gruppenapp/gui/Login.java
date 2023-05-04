@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import lombok.AllArgsConstructor;
+import org.abs.gruppenapp.repository.TeacherRepository;
 import org.abs.gruppenapp.services.DatabaseService;
 import org.springframework.stereotype.Component;
 
@@ -70,6 +71,10 @@ public class Login extends JFrame {
       var username = nameTextField.getText();
       var password = new String(passwordTextField.getPassword());
 
+
+      // get password from db
+
+      databaseService.getTeacherByUsername(username);
       if (username.equals("admin") && password.equals("1234")) {
         openMainWindow();
       } else {

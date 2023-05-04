@@ -2,14 +2,8 @@ package org.abs.gruppenapp.services;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.abs.gruppenapp.entities.Course;
-import org.abs.gruppenapp.entities.LearningField;
-import org.abs.gruppenapp.entities.Student;
-import org.abs.gruppenapp.entities.Subject;
-import org.abs.gruppenapp.repository.CourseRepository;
-import org.abs.gruppenapp.repository.LearningFieldRepository;
-import org.abs.gruppenapp.repository.StudentRepository;
-import org.abs.gruppenapp.repository.SubjectRepository;
+import org.abs.gruppenapp.entities.*;
+import org.abs.gruppenapp.repository.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +15,7 @@ public class DatabaseService {
   private final SubjectRepository subjectRepository;
   private final StudentRepository studentRepository;
 
+  private  final TeacherRepository teacherRepository;
 
   public List<String> getAllCourses() {
     List<Course> courses = (List<Course>) courseRepository.findAll();
@@ -43,5 +38,9 @@ public class DatabaseService {
 
   public List<Student> getStudentsByCourseNameAndSubject(String courseName, String subject) {
     return studentRepository.findByCourse_NameAndSubject_Name(courseName, subject);
+  }
+
+  public Teacher getTeacherByUsername(String username) {
+    return teacherRepository.findByUsername(username);
   }
 }
