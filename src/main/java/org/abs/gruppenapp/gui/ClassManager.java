@@ -4,9 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -141,7 +139,12 @@ public class ClassManager extends JFrame {
       deleteLfBtn.addActionListener(alf -> {
         int rowNum = lfTable.getSelectedRow();
         var lfName = lfTable.getValueAt(rowNum, 0).toString();
-        databaseService.deleteLF(lfName);
+
+        Course course = databaseService.getCourseByName(courseSelected);
+        LearningField lf = databaseService.getLfListByName(lfName).get(0);
+        course.getLf().remove(lf);
+        lf.getCourses().remove(course);
+
         reloadFrame();
       });
     });

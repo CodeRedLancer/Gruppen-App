@@ -62,6 +62,10 @@ public class DatabaseService {
     return learningField.stream().map(LearningField::getName).toList();
   }
 
+  public List<LearningField> getLfListByName(String name) {
+    return learningFieldRepository.findByName(name);
+  }
+
   public void deleteLF(String lf) {
     var lfFound = learningFieldRepository.findByName(lf);
     learningFieldRepository.delete(lfFound.get(0));
