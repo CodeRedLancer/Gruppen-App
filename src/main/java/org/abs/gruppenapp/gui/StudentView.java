@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class Gui extends JFrame {
+public class StudentView extends JFrame {
 
   private final DatabaseService databaseService;
 
@@ -44,19 +44,27 @@ public class Gui extends JFrame {
     var courseSelection = getCourseSelection();
     mainPanel.add(courseSelection);
 
+    var backBtn = new JButton("Zurück zur Übersicht");
+
+    downPanel.add(backBtn);
+
     add(mainPanel, BorderLayout.NORTH);
     add(downPanel, BorderLayout.SOUTH);
     setVisible(true);
+
+    backBtn.addActionListener(a -> backToTeacherDashboard());
 
     courseSelection.addActionListener(event -> {
       clearDownPanel(downPanel);
       var courseSelected = (String) courseSelection.getSelectedItem();
       var lfSelection = getLfSelection(courseSelected);
 
+      downPanel.add(backBtn);
       updateMainPanel(mainPanel, courseSelection, lfSelection);
 
       lfSelection.addActionListener(eventLf -> {
         clearDownPanel(downPanel);
+        downPanel.add(backBtn);
         var lfSelected = (String) lfSelection.getSelectedItem();
         List<String> subject = databaseService.getFachrichtungByLfName(lfSelected);
 
@@ -111,7 +119,7 @@ public class Gui extends JFrame {
   private void updateDownPanel(JPanel downPanel, JTable table) {
     downPanel.removeAll();
 
-    var studentManagerBtn = new JButton("Schüler bearbeiten");
+    var backBtn = new JButton("Zurück zur Übersicht");
     var gruppeErstellenBtn = new JButton("Gruppe erstellen");
 
     List<StudentToGroup> studentsToGroup = new ArrayList<>();
@@ -130,16 +138,12 @@ public class Gui extends JFrame {
       var groupFrame = createGroupForm();
       groupFrame.setLocationRelativeTo(null);
       groupFrame.setVisible(true);
-
-      studentsToGroup.forEach(student -> System.out.println(student.getFirstName() + " " + student.getLastName()));
-
     });
-
-    studentManagerBtn.addActionListener(a -> openStudentManager());
-
     getStudentsList(studentsToGroup);
 
-    downPanel.add(studentManagerBtn);
+    backBtn.addActionListener(a -> backToTeacherDashboard());
+
+    downPanel.add(backBtn);
     downPanel.add(gruppeErstellenBtn);
     downPanel.revalidate();
     downPanel.repaint();
@@ -176,10 +180,10 @@ public class Gui extends JFrame {
     return frame;
   }
 
-  private void openStudentManager() {
-    StudentManager studentManager = new StudentManager(databaseService);
-    studentManager.setVisible(true);
-    studentManager.initialize();
+  public void backToTeacherDashboard() {
+    DashboardTeacher dashboardTeacher = new DashboardTeacher(databaseService);
+    dashboardTeacher.setVisible(true);
+    dashboardTeacher.initialize();
     setVisible(false);
   }
 

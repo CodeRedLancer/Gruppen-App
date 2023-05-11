@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -74,7 +72,6 @@ public class Login extends JFrame {
       var password = new String(passwordTextField.getPassword());
 
       if (username.equals("admin") && password.equals("1234")) {
-//        openMainWindow();
         openDashboardAdmin();
       } else if (username.equals("teacher") && password.equals("teacher")) {
         openDashboardTeacher();
@@ -89,7 +86,6 @@ public class Login extends JFrame {
       var password = new String(passwordTextField.getPassword());
 
       if (username.equals("admin") && password.equals("1234")) {
-//        openMainWindow();
         openDashboardAdmin();
       } else if (username.equals("teacher") && password.equals("teacher")) {
         openDashboardTeacher();
@@ -97,13 +93,6 @@ public class Login extends JFrame {
         errorLabel.setText("Der Benutzername oder das Kennwort ist falsch");
       }
     });
-  }
-
-  private void openMainWindow() {
-    Gui gui = new Gui(databaseService);
-    gui.setVisible(true);
-    gui.initialize();
-    setVisible(false);
   }
 
   private void openDashboardAdmin() {
@@ -119,6 +108,4 @@ public class Login extends JFrame {
     dashboardTeacher.initialize();
     setVisible(false);
   }
-
-
 }
