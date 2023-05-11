@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import lombok.AllArgsConstructor;
+import org.abs.gruppenapp.entities.Course;
 import org.abs.gruppenapp.entities.Student;
 import org.abs.gruppenapp.services.DatabaseService;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,18 @@ public class StudentManager extends JFrame {
 
     var classSelection = getClasses();
     checkboxPanel.add(classSelection);
+
+    classSelection.addActionListener(event -> {
+      clearDownPanel(mainPanel);
+      var classSelected = (String) classSelection.getSelectedItem();
+       updateMainPanel(mainPanel, classSelection);
+
+//      var table = createTable(courseSelected, subjectSelected);
+//      table.setFillsViewportHeight(true);
+//      JScrollPane scrollPane = new JScrollPane(table);
+
+
+    });
 
     JTable table = new JTable();
     table.setFillsViewportHeight(true);
@@ -128,6 +141,64 @@ public class StudentManager extends JFrame {
     backToDashboardBtn.addActionListener(a -> backToAdminDashboard());
   }
 
+  private JTable createTable(String courseName, String subjectName) {
+    JTable table = new JTable() {
+      @Override
+      public Class<?> getColumnClass(int column) {
+        return switch (column) {
+          case 0, 1 -> String.class;
+          case 2 -> Integer.class;
+          default -> Boolean.class;
+        };
+      }
+    };
+    DefaultTableModel model = new DefaultTableModel();
+
+    JTableHeader header = table.getTableHeader();
+    header.setBackground(Color.yellow);
+    table.setGridColor(Color.GRAY);
+
+    String[] columnNames = {"Nachname", "Vorname", "Leistung", "Abwesend"};
+    model.setColumnIdentifiers(columnNames);
+    table.setModel(model);
+
+    List<Student> students;
+
+    if (subjectName == null) {
+      students = databaseService.getStudentsByCourseName(courseName);
+    } else {
+      students = databaseService.getStudentsByCourseNameAndSubject(courseName, subjectName);
+    }
+
+    for (Student student : students) {
+      Object[] o = new Object[4];
+      o[0] = student.getLastName();
+      o[1] = student.getFirstName();
+      o[2] = student.getEvaluation();
+      o[3] = false;
+      model.addRow(o);
+    }
+    return table;
+  }
+
+
+  private void clearDownPanel(JPanel downPanel) {
+    downPanel.removeAll();
+    downPanel.revalidate();
+    downPanel.repaint();
+  }
+
+  private void updateMainPanel(JPanel mainPanel, java.awt.Component... elements) {
+    mainPanel.removeAll();
+
+    for (java.awt.Component o : elements) {
+      mainPanel.add(o);
+    }
+
+    mainPanel.revalidate();
+    mainPanel.repaint();
+  }
+
   private JComboBox<String> getClasses() {
     List<String> courseNames = databaseService.getAllCourses();
     return createComboBox(courseNames);
@@ -167,7 +238,8 @@ public class StudentManager extends JFrame {
       row[1] = student.getLastName();
       row[2] = student.getFirstName();
       row[3] = student.getCourse().getName();
-      row[4] = student.getSubject().getName();
+      row[4] = "null";
+//      row[4] = student.getSubject().getName();
       row[5] = student.getEvaluation();
       model.addRow(row);
     }
@@ -177,11 +249,11 @@ public class StudentManager extends JFrame {
     JFrame frame = new JFrame();
 
     frame.setTitle("GroupMaker 8");
-    frame.setSize(550, 250);
+    frame.setSize(600, 200);
     frame.setLayout(new BorderLayout());
     setLocationRelativeTo(null);
 
-    JPanel panel = new JPanel(new GridLayout(3, 1));
+    JPanel panel = new JPanel(new GridLayout(2, 0));
     panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
     JPanel panelForBtn = new JPanel(new GridLayout(2, 1));
@@ -192,9 +264,9 @@ public class StudentManager extends JFrame {
     JLabel firstnameLabel = new JLabel("Vorname");
     JTextField firstnameTextField = new JTextField();
     JLabel classLabel = new JLabel("Klasse");
-    JComboBox<String> classBox = new JComboBox<>();
-    JLabel subjectLabel = new JLabel("Fachrichtung");
-    JComboBox<String> subjectBox = new JComboBox<>();
+    JComboBox<String> classBox = setClasses();
+//    JLabel subjectLabel = new JLabel("Fachrichtung");
+//    JComboBox<String> subjectBox = new JComboBox<>();
     JLabel leistungLabel = new JLabel("Note");
     JTextField leistungTextField = new JTextField();
     JButton confirmBtn = new JButton("Speichern");
@@ -206,8 +278,8 @@ public class StudentManager extends JFrame {
     panel.add(firstnameTextField);
     panel.add(classLabel);
     panel.add(classBox);
-    panel.add(subjectLabel);
-    panel.add(subjectBox);
+//    panel.add(subjectLabel);
+//    panel.add(subjectBox);
     panel.add(leistungLabel);
     panel.add(leistungTextField);
 
@@ -219,14 +291,16 @@ public class StudentManager extends JFrame {
     confirmBtn.addActionListener(a -> {
       var lastname = lastnameTextField.getText();
       var firstname = firstnameTextField.getText();
-      var course = classBox.getSelectedItem();
-      var subject = subjectBox.getSelectedItem();
+      var course = classBox.getSelectedItem().toString();
+//      var subject = subjectBox.getSelectedItem();
       var evaluation = leistungTextField.getText();
 
       Student student = new Student();
       student.setLastName(lastname);
       student.setFirstName(firstname);
-//      student.setCourse(course);
+
+      Course course1 = databaseService.getCourseByName(course);
+      student.setCourse(course1);
 //      student.setSubject(subject);
       student.setEvaluation(Integer.parseInt(evaluation));
 
@@ -237,6 +311,11 @@ public class StudentManager extends JFrame {
     });
 
     return frame;
+  }
+
+  private JComboBox<String> setClasses() {
+    List<String> classNames = databaseService.getAllCourses();
+    return createComboBox(classNames);
   }
 
   private JFrame createStudentForm(Student foundStudent){

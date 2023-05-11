@@ -18,7 +18,7 @@ public class DashboardTeacher extends JFrame {
 
   private final DatabaseService databaseService;
 
-  public void initialize(){
+  public void initialize() {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     setTitle("GroupMaker 8");
@@ -46,29 +46,36 @@ public class DashboardTeacher extends JFrame {
     setVisible(true);
 
     logoutBtn.addActionListener(a -> logout());
+    groupBtn.addActionListener(a -> openMainWindow());
     classBtn.addActionListener(a -> openClassManager());
     studentBtn.addActionListener(a -> openStudentManager());
   }
 
-  private void logout(){
+  private void logout() {
     Login login = new Login(databaseService);
     login.setVisible(true);
     login.initialize();
     setVisible(false);
   }
 
-  private void openClassManager(){
+  private void openMainWindow() {
+    Gui gui = new Gui(databaseService);
+    gui.setVisible(true);
+    gui.initialize();
+    setVisible(false);
+  }
+
+  private void openClassManager() {
     ClassManager classManager = new ClassManager(databaseService);
     classManager.setVisible(true);
     classManager.initialize();
     setVisible(false);
   }
 
-  private void openStudentManager(){
+  private void openStudentManager() {
     StudentManager studentManager = new StudentManager(databaseService);
     studentManager.setVisible(true);
     studentManager.initialize();
     setVisible(false);
   }
-
 }

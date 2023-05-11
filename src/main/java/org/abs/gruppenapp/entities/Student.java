@@ -36,11 +36,11 @@ public class Student {
   @Column(name = "evaluation")
   private int evaluation;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "subject_Id")
   private Subject subject;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "course_Id")
   private Course course;
 }

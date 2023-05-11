@@ -3,16 +3,19 @@ package org.abs.gruppenapp.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import lombok.AllArgsConstructor;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class Gui extends JFrame {
+
   private final DatabaseService databaseService;
 
   public void initialize() {
@@ -107,7 +111,7 @@ public class Gui extends JFrame {
   private void updateDownPanel(JPanel downPanel, JTable table) {
     downPanel.removeAll();
 
-    var klasseBearbeitenBtn = new JButton("Klasse bearbeiten");
+    var studentManagerBtn = new JButton("Schüler bearbeiten");
     var gruppeErstellenBtn = new JButton("Gruppe erstellen");
 
     List<StudentToGroup> studentsToGroup = new ArrayList<>();
@@ -123,16 +127,60 @@ public class Gui extends JFrame {
         }
       }
 
+      var groupFrame = createGroupForm();
+      groupFrame.setLocationRelativeTo(null);
+      groupFrame.setVisible(true);
+
       studentsToGroup.forEach(student -> System.out.println(student.getFirstName() + " " + student.getLastName()));
 
     });
 
+    studentManagerBtn.addActionListener(a -> openStudentManager());
+
     getStudentsList(studentsToGroup);
 
-    downPanel.add(klasseBearbeitenBtn);
+    downPanel.add(studentManagerBtn);
     downPanel.add(gruppeErstellenBtn);
     downPanel.revalidate();
     downPanel.repaint();
+  }
+
+  private JFrame createGroupForm(){
+    JFrame frame = new JFrame();
+
+    frame.setTitle("GroupMaker 8");
+    frame.setSize(600, 200);
+    frame.setLayout(new BorderLayout());
+    setLocationRelativeTo(null);
+
+    JPanel panel = new JPanel(new GridLayout(2, 0));
+    panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+    JPanel panelForBtn = new JPanel(new GridLayout(2, 1));
+    panelForBtn.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+    var leistungCheckBox = new JCheckBox("nach Leistung");
+    var gemischtCheckBox = new JCheckBox("gemischt");
+
+    JButton confirmBtn = new JButton("Gruppen erstellen");
+    confirmBtn.setSize(20, 10);
+
+    panel.add(leistungCheckBox);
+    panel.add(gemischtCheckBox);
+
+    panelForBtn.add(confirmBtn);
+
+    frame.add(panel, BorderLayout.CENTER);
+    frame.add(panelForBtn, BorderLayout.SOUTH);
+
+    return frame;
+  }
+
+  private void openStudentManager() {
+    StudentManager studentManager = new StudentManager(databaseService);
+    studentManager.setVisible(true);
+    studentManager.initialize();
+    setVisible(false);
   }
 
   private JComboBox<String> getCourseSelection() {
