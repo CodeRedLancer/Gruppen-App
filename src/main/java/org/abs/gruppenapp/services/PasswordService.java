@@ -77,6 +77,7 @@ public class PasswordService {
             System.out.println("Exception thrown for incorrect algorithm: " + e);
         }
     }
+
     public static void main(String[] args) {
         demo();
     }
