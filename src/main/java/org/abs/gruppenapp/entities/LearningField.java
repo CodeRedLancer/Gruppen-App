@@ -36,7 +36,7 @@ public class LearningField {
   @ManyToMany(mappedBy = "lf")
   private Set<Course> courses = new HashSet<>();
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "lfs_subjects",
       joinColumns = @JoinColumn(name = "lf_Id", referencedColumnName = "lfId"),

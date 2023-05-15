@@ -3,16 +3,19 @@ package org.abs.gruppenapp.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import lombok.AllArgsConstructor;
@@ -23,7 +26,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class Gui extends JFrame {
+public class StudentView extends JFrame {
+
   private final DatabaseService databaseService;
 
   public void initialize() {
@@ -32,6 +36,7 @@ public class Gui extends JFrame {
     setTitle("GroupMaker 8");
     setSize(500, 500);
     setLayout(new BorderLayout());
+    setLocationRelativeTo(null);
 
     var mainPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     var downPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -39,19 +44,27 @@ public class Gui extends JFrame {
     var courseSelection = getCourseSelection();
     mainPanel.add(courseSelection);
 
+    var backBtn = new JButton("Zurück zur Übersicht");
+
+    downPanel.add(backBtn);
+
     add(mainPanel, BorderLayout.NORTH);
     add(downPanel, BorderLayout.SOUTH);
     setVisible(true);
+
+    backBtn.addActionListener(a -> backToTeacherDashboard());
 
     courseSelection.addActionListener(event -> {
       clearDownPanel(downPanel);
       var courseSelected = (String) courseSelection.getSelectedItem();
       var lfSelection = getLfSelection(courseSelected);
 
+      downPanel.add(backBtn);
       updateMainPanel(mainPanel, courseSelection, lfSelection);
 
       lfSelection.addActionListener(eventLf -> {
         clearDownPanel(downPanel);
+        downPanel.add(backBtn);
         var lfSelected = (String) lfSelection.getSelectedItem();
         List<String> subject = databaseService.getFachrichtungByLfName(lfSelected);
 
@@ -106,7 +119,7 @@ public class Gui extends JFrame {
   private void updateDownPanel(JPanel downPanel, JTable table) {
     downPanel.removeAll();
 
-    var klasseBearbeitenBtn = new JButton("Klasse bearbeiten");
+    var backBtn = new JButton("Zurück zur Übersicht");
     var gruppeErstellenBtn = new JButton("Gruppe erstellen");
 
     List<StudentToGroup> studentsToGroup = new ArrayList<>();
@@ -122,16 +135,56 @@ public class Gui extends JFrame {
         }
       }
 
-      studentsToGroup.forEach(student -> System.out.println(student.getFirstName() + " " + student.getLastName()));
-
+      var groupFrame = createGroupForm();
+      groupFrame.setLocationRelativeTo(null);
+      groupFrame.setVisible(true);
     });
-
     getStudentsList(studentsToGroup);
 
-    downPanel.add(klasseBearbeitenBtn);
+    backBtn.addActionListener(a -> backToTeacherDashboard());
+
+    downPanel.add(backBtn);
     downPanel.add(gruppeErstellenBtn);
     downPanel.revalidate();
     downPanel.repaint();
+  }
+
+  private JFrame createGroupForm(){
+    JFrame frame = new JFrame();
+
+    frame.setTitle("GroupMaker 8");
+    frame.setSize(600, 200);
+    frame.setLayout(new BorderLayout());
+    setLocationRelativeTo(null);
+
+    JPanel panel = new JPanel(new GridLayout(2, 0));
+    panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+    JPanel panelForBtn = new JPanel(new GridLayout(2, 1));
+    panelForBtn.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+    var leistungCheckBox = new JCheckBox("nach Leistung");
+    var gemischtCheckBox = new JCheckBox("gemischt");
+
+    JButton confirmBtn = new JButton("Gruppen erstellen");
+    confirmBtn.setSize(20, 10);
+
+    panel.add(leistungCheckBox);
+    panel.add(gemischtCheckBox);
+
+    panelForBtn.add(confirmBtn);
+
+    frame.add(panel, BorderLayout.CENTER);
+    frame.add(panelForBtn, BorderLayout.SOUTH);
+
+    return frame;
+  }
+
+  public void backToTeacherDashboard() {
+    DashboardTeacher dashboardTeacher = new DashboardTeacher(databaseService);
+    dashboardTeacher.setVisible(true);
+    dashboardTeacher.initialize();
+    setVisible(false);
   }
 
   private JComboBox<String> getCourseSelection() {

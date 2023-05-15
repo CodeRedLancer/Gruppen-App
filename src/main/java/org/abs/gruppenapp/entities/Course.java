@@ -38,7 +38,7 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Student> students = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "courses_learningFields",
         joinColumns = @JoinColumn(name = "course_Id", referencedColumnName = "courseId"),
