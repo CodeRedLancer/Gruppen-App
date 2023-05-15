@@ -69,7 +69,7 @@ public class StudentManager extends JFrame {
 
     JTable table = new JTable();
     table.setFillsViewportHeight(true);
-    String[] columnNames = {"ID", "Nachname", "Vorname", "Klasse", "Fachrichtung", "Note"};
+    String[] columnNames = {"ID", "Nachname", "Vorname", "Klasse", "Note"};
     DefaultTableModel model = new DefaultTableModel();
     model.setColumnIdentifiers(columnNames);
     JTableHeader header = table.getTableHeader();
@@ -138,49 +138,8 @@ public class StudentManager extends JFrame {
     setVisible(true);
 
     logoutBtn.addActionListener(a -> logout());
-    backToDashboardBtn.addActionListener(a -> backToAdminDashboard());
+    backToDashboardBtn.addActionListener(a -> backToTeacherDashboard());
   }
-
-  private JTable createTable(String courseName, String subjectName) {
-    JTable table = new JTable() {
-      @Override
-      public Class<?> getColumnClass(int column) {
-        return switch (column) {
-          case 0, 1 -> String.class;
-          case 2 -> Integer.class;
-          default -> Boolean.class;
-        };
-      }
-    };
-    DefaultTableModel model = new DefaultTableModel();
-
-    JTableHeader header = table.getTableHeader();
-    header.setBackground(Color.yellow);
-    table.setGridColor(Color.GRAY);
-
-    String[] columnNames = {"Nachname", "Vorname", "Leistung", "Abwesend"};
-    model.setColumnIdentifiers(columnNames);
-    table.setModel(model);
-
-    List<Student> students;
-
-    if (subjectName == null) {
-      students = databaseService.getStudentsByCourseName(courseName);
-    } else {
-      students = databaseService.getStudentsByCourseNameAndSubject(courseName, subjectName);
-    }
-
-    for (Student student : students) {
-      Object[] o = new Object[4];
-      o[0] = student.getLastName();
-      o[1] = student.getFirstName();
-      o[2] = student.getEvaluation();
-      o[3] = false;
-      model.addRow(o);
-    }
-    return table;
-  }
-
 
   private void clearDownPanel(JPanel downPanel) {
     downPanel.removeAll();
@@ -222,10 +181,10 @@ public class StudentManager extends JFrame {
     setVisible(false);
   }
 
-  public void backToAdminDashboard() {
-    DashboardAdmin dashboardAdmin = new DashboardAdmin(databaseService);
-    dashboardAdmin.setVisible(true);
-    dashboardAdmin.initialize();
+  public void backToTeacherDashboard() {
+    DashboardTeacher dashboardTeacher = new DashboardTeacher(databaseService);
+    dashboardTeacher.setVisible(true);
+    dashboardTeacher.initialize();
     setVisible(false);
   }
 
@@ -238,9 +197,7 @@ public class StudentManager extends JFrame {
       row[1] = student.getLastName();
       row[2] = student.getFirstName();
       row[3] = student.getCourse().getName();
-      row[4] = "null";
-//      row[4] = student.getSubject().getName();
-      row[5] = student.getEvaluation();
+      row[4] = student.getEvaluation();
       model.addRow(row);
     }
   }
@@ -265,8 +222,6 @@ public class StudentManager extends JFrame {
     JTextField firstnameTextField = new JTextField();
     JLabel classLabel = new JLabel("Klasse");
     JComboBox<String> classBox = setClasses();
-//    JLabel subjectLabel = new JLabel("Fachrichtung");
-//    JComboBox<String> subjectBox = new JComboBox<>();
     JLabel leistungLabel = new JLabel("Note");
     JTextField leistungTextField = new JTextField();
     JButton confirmBtn = new JButton("Speichern");
@@ -338,8 +293,6 @@ public class StudentManager extends JFrame {
     JTextField firstnameTextField = new JTextField();
     JLabel classLabel = new JLabel("Klasse");
     JComboBox<String> classBox = new JComboBox<>();
-    JLabel subjectLabel = new JLabel("Fachrichtung");
-    JComboBox<String> subjectBox = new JComboBox<>();
     JLabel leistungLabel = new JLabel("Note");
     JTextField leistungTextField = new JTextField();
     JButton confirmBtn = new JButton("Speichern");
@@ -351,8 +304,6 @@ public class StudentManager extends JFrame {
     panel.add(firstnameTextField);
     panel.add(classLabel);
     panel.add(classBox);
-    panel.add(subjectLabel);
-    panel.add(subjectBox);
     panel.add(leistungLabel);
     panel.add(leistungTextField);
 
@@ -365,15 +316,12 @@ public class StudentManager extends JFrame {
       var lastname = lastnameTextField.getText();
       var firstname = firstnameTextField.getText();
       var course = classBox.getSelectedItem();
-      var subject = subjectBox.getSelectedItem();
       var evaluation = leistungTextField.getText();
 
       Student student = new Student();
       student.setStudentId(foundStudent.getStudentId());
       student.setLastName(lastname);
       student.setFirstName(firstname);
-//      student.setCourse(course);
-//      student.setSubject(subject);
       student.setEvaluation(Integer.parseInt(evaluation));
 
       databaseService.saveStudent(student);

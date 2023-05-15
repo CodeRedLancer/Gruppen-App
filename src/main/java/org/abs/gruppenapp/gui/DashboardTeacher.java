@@ -32,12 +32,10 @@ public class DashboardTeacher extends JFrame {
 
     JButton logoutBtn = new JButton("Ausloggen");
     JButton groupBtn = new JButton("Gruppen erstellen");
-    JButton classBtn = new JButton("Klassen verwalten");
     JButton studentBtn = new JButton("Schüler verwalten");
 
     loginPanel.add(logoutBtn);
     mainPanel.add(groupBtn);
-    mainPanel.add(classBtn);
     mainPanel.add(studentBtn);
 
     add(loginPanel, BorderLayout.NORTH);
@@ -47,7 +45,6 @@ public class DashboardTeacher extends JFrame {
 
     logoutBtn.addActionListener(a -> logout());
     groupBtn.addActionListener(a -> openMainWindow());
-    classBtn.addActionListener(a -> openClassManager());
     studentBtn.addActionListener(a -> openStudentManager());
   }
 
@@ -59,16 +56,9 @@ public class DashboardTeacher extends JFrame {
   }
 
   private void openMainWindow() {
-    Gui gui = new Gui(databaseService);
+    StudentView gui = new StudentView(databaseService);
     gui.setVisible(true);
     gui.initialize();
-    setVisible(false);
-  }
-
-  private void openClassManager() {
-    ClassManager classManager = new ClassManager(databaseService);
-    classManager.setVisible(true);
-    classManager.initialize();
     setVisible(false);
   }
 

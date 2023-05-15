@@ -156,7 +156,7 @@ public class ClassManager extends JFrame {
     });
 
     logoutBtn.addActionListener(a -> logout());
-    backToDashboardBtn.addActionListener(a -> backToAdminDashboard());
+    backToDashboardBtn.addActionListener(a ->backToAdminDashboard());
   }
 
   public void logout() {

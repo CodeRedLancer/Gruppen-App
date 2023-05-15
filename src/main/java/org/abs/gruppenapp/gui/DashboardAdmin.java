@@ -33,12 +33,10 @@ public class DashboardAdmin extends JFrame {
     JButton logoutBtn = new JButton("Ausloggen");
     JButton teacherBtn = new JButton("Lehrer verwalten");
     JButton classBtn = new JButton("Klassen verwalten");
-    JButton studentBtn = new JButton("Schüler verwalten");
 
     loginPanel.add(logoutBtn);
     mainPanel.add(teacherBtn);
     mainPanel.add(classBtn);
-    mainPanel.add(studentBtn);
 
     add(loginPanel, BorderLayout.NORTH);
     add(mainPanel, BorderLayout.CENTER);
@@ -48,7 +46,6 @@ public class DashboardAdmin extends JFrame {
     logoutBtn.addActionListener(a -> logout());
     teacherBtn.addActionListener(a -> openTeacherManager());
     classBtn.addActionListener(a -> openClassManager());
-    studentBtn.addActionListener(a -> openStudentManager());
   }
 
   public void logout(){
@@ -73,13 +70,4 @@ public class DashboardAdmin extends JFrame {
     setLocationRelativeTo(null);
     setVisible(false);
   }
-
-  private void openStudentManager(){
-    StudentManager studentManager = new StudentManager(databaseService);
-    studentManager.setVisible(true);
-    studentManager.initialize();
-    setLocationRelativeTo(null);
-    setVisible(false);
-  }
-
 }
