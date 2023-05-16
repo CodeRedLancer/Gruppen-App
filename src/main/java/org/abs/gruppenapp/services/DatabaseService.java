@@ -130,7 +130,7 @@ public class DatabaseService {
     }
   }
 
-  public Teacher getTeacherByUsername(String username) {
+  public Optional<Teacher> getTeacherByUsername(String username) {
     return teacherRepository.findByUsername(username);
   }
 }

@@ -8,10 +8,8 @@ import java.util.Random;
 
 public class PasswordService {
     public static byte[] getSHA(String input) throws NoSuchAlgorithmException {
-        /* MessageDigest instance for hashing using SHA256 */
         MessageDigest md = MessageDigest.getInstance("SHA-256");
 
-        /* digest() method called to calculate message digest of an input and return array of byte */
         return md.digest(input.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -26,14 +24,13 @@ public class PasswordService {
                 .toString();
     }
 
+    public static String getPepper() {
+        return "g$KzfS/?X<aT]8d@3";
+    }
+
     public static String toHexString(byte[] hash) {
-        /* Convert byte array of hash into digest */
         BigInteger number = new BigInteger(1, hash);
-
-        /* Convert the digest into hex value */
         StringBuilder hexString = new StringBuilder(number.toString(16));
-
-        /* Pad with leading zeros */
         while (hexString.length() < 32) {
             hexString.insert(0, '0');
         }
@@ -43,7 +40,7 @@ public class PasswordService {
 
     public static String[] hashPassword(String password) throws NoSuchAlgorithmException {
         String salt = getSalt(16);
-        String hashedPassword = toHexString(getSHA(password + salt));
+        String hashedPassword = toHexString(getSHA(password + salt + getPepper()));
 
         return new String[]{hashedPassword, salt};
 
@@ -51,14 +48,14 @@ public class PasswordService {
 
     public static String[] hashPassword(String password, int saltLength) throws NoSuchAlgorithmException {
         String salt = getSalt(saltLength);
-        String hashedPassword = toHexString(getSHA(password + salt));
+        String hashedPassword = toHexString(getSHA(password + salt + getPepper()));
 
         return new String[]{hashedPassword, salt};
 
     }
 
     public static Boolean validatePassword(String password, String salt, String hashedPassword) throws NoSuchAlgorithmException {
-        String passwordToCheck = toHexString(getSHA(password + salt));
+        String passwordToCheck = toHexString(getSHA(password + salt + getPepper()));
 
         return hashedPassword.equals(passwordToCheck);
     }

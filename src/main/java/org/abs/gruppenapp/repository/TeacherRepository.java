@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeacherRepository extends CrudRepository<Teacher, Long> {
-    Teacher findByUsername(@Param("username") String username);
-  List<Teacher> findAllByOrderByLastNameAsc();
-  Optional<Teacher> findByTeacherId(int id);
+    List<Teacher> findAllByOrderByLastNameAsc();
+
+    Optional<Teacher> findByTeacherId(int id);
+
+    Optional<Teacher> findByUsername(@Param("username") String username);
 }
