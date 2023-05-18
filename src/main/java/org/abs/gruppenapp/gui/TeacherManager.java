@@ -160,7 +160,7 @@ public class TeacherManager extends JFrame {
     frame.setLayout(new BorderLayout());
     setLocationRelativeTo(null);
 
-    JPanel panel = new JPanel(new GridLayout(5, 1));
+    JPanel panel = new JPanel(new GridLayout(6, 1));
     panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
     JPanel panelForBtn = new JPanel(new GridLayout(2, 1));
@@ -175,6 +175,8 @@ public class TeacherManager extends JFrame {
     JLabel passwordLabel = new JLabel("Password");
     JPasswordField passwordTextField = new JPasswordField();
     JButton confirmBtn = new JButton("Speichern");
+    JLabel errorLabel = new JLabel();
+    errorLabel.setForeground(Color.red);
     confirmBtn.setSize(20, 10);
 
     panel.add(lastnameLabel);
@@ -187,34 +189,41 @@ public class TeacherManager extends JFrame {
     panel.add(passwordTextField);
 
     panelForBtn.add(confirmBtn);
+    panelForBtn.add(errorLabel);
 
     frame.add(panel, BorderLayout.CENTER);
     frame.add(panelForBtn, BorderLayout.SOUTH);
 
     confirmBtn.addActionListener(a -> {
+      errorLabel.setText(null);
       var lastname = lastnameTextField.getText();
       var firstname = firstnameTextField.getText();
       var username = usernameTextField.getText();
       char[] password = passwordTextField.getPassword();
       String passwordString = new String(password);
 
-      Teacher teacher = new Teacher();
-      teacher.setLastName(lastname);
-      teacher.setFirstName(firstname);
-      teacher.setUsername(username);
-      try {
-        String[] hashedPassword = PasswordService.hashPassword(passwordString);
-        teacher.setPassword(hashedPassword[0]);
-        teacher.setSalt(hashedPassword[1]);
+      var tmp = databaseService.getTeacherByUsername(username);
+      if (tmp.isPresent()) {
+        errorLabel.setText("Der Benutzername existiert bereits");
+      } else {
+        Teacher teacher = new Teacher();
+        teacher.setLastName(lastname);
+        teacher.setFirstName(firstname);
+        teacher.setUsername(username);
+        try {
+          String[] hashedPassword = PasswordService.hashPassword(passwordString);
+          teacher.setPassword(hashedPassword[0]);
+          teacher.setSalt(hashedPassword[1]);
 
-      } catch (NoSuchAlgorithmException e) {
-        throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+          throw new RuntimeException(e);
+        }
+
+        databaseService.saveTeacher(teacher);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(false);
+        reloadFrame();
       }
-
-      databaseService.saveTeacher(teacher);
-      frame.setLocationRelativeTo(null);
-      frame.setVisible(false);
-      reloadFrame();
     });
 
     return frame;
