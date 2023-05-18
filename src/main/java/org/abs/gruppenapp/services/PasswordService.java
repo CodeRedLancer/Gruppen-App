@@ -46,14 +46,6 @@ public class PasswordService {
 
     }
 
-    public static String[] hashPassword(String password, int saltLength) throws NoSuchAlgorithmException {
-        String salt = getSalt(saltLength);
-        String hashedPassword = toHexString(getSHA(password + salt + getPepper()));
-
-        return new String[]{hashedPassword, salt};
-
-    }
-
     public static Boolean validatePassword(String password, String salt, String hashedPassword) throws NoSuchAlgorithmException {
         String passwordToCheck = toHexString(getSHA(password + salt + getPepper()));
 
