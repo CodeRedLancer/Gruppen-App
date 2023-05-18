@@ -59,23 +59,4 @@ public class PasswordService {
 
         return hashedPassword.equals(passwordToCheck);
     }
-
-    public static void demo() {
-        try {
-            String[] passwort = hashPassword("meinPasswort");
-            String[] passwort2 = hashPassword("meinPasswort", 16);
-
-            System.out.println("Passwort: " + passwort[0] + " Salt: " + passwort[1]);
-            System.out.println("Passwort: " + passwort2[0] + " Salt: " + passwort2[1]);
-
-            System.out.println(validatePassword("meinPasswort", passwort[1], passwort[0]));
-
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("Exception thrown for incorrect algorithm: " + e);
-        }
-    }
-
-    public static void main(String[] args) {
-        demo();
-    }
 }
