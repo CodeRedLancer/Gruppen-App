@@ -283,10 +283,11 @@ public class TeacherManager extends JFrame {
       if (tmp.isPresent()) {
         errorLabel.setText("Der Benutzername existiert bereits");
       } else {
-        Teacher teacher = new Teacher();
+        Teacher teacher = databaseService.getTeacherReferenceById(Integer.parseInt(teacherId.getText()));
         teacher.setLastName(lastname);
         teacher.setFirstName(firstname);
         teacher.setUsername(username);
+
         try {
           String[] hashedPassword = PasswordService.hashPassword(passwordString);
           teacher.setPassword(hashedPassword[0]);
@@ -296,7 +297,6 @@ public class TeacherManager extends JFrame {
           throw new RuntimeException(e);
         }
 
-        databaseService.removeTeacher(Integer.parseInt(teacherId.getText()));
         databaseService.saveTeacher(teacher);
         frame.setLocationRelativeTo(null);
         frame.setVisible(false);

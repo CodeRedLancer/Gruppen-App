@@ -133,4 +133,8 @@ public class DatabaseService {
   public Optional<Teacher> getTeacherByUsername(String username) {
     return teacherRepository.findByUsername(username);
   }
+
+  public Teacher getTeacherReferenceById(int id) {
+    return teacherRepository.getTeacherReferenceByTeacherId(id);
+  }
 }
