@@ -1,0 +1,125 @@
+@startuml
+
+namespace Entitys{
+class Course {
+course_id : int
+name : String
+}
+
+class Group {
+id_group : int
+id_course : int
+description : String
+}
+
+class Grouping {
+idGrouping : int
+idGroup : int
+idStudent : int
+}
+
+class LearningField {
+lfId : int
+name : String
+courses : Set<Course>
+}
+
+class Student {
+studentId : int
+firstName : String
+lastName : String
+evaluation : int
+subject_Id : int
+course_Id : int
+}
+
+class StudentToGroup {
+firstName : String
+lastName : String
+evaluation : int
+}
+
+class Subject {
+subjectId : int
+name : String
+}
+
+class Teacher {
+teacherId : int
+firstName : String
+lastName : String
+password : String
+salt : String
+username : String
+}
+}
+
+namespace Services{
+class DatabaseService {
+CourseRepository
+LearningFieldRepository
+SubjectRepository
+StudentRepository
+TeacherRepository
++getAllCourses() : List<String>
++getCourseByName(String courseName) : Course
++saveCourse(Course course) : void
++getAllLearningFields() : List<String>
++saveLearningField(LearningField lf) : void
++getLfByCourseName(String courseName) : List<String>
++getLfByName(String name) : List<String>
++getLfListByName(String name) : List<LearningField>
++deleteLF(String lf) : void
++getFachrichtungByLfName(String lfName) : List<String>
++getStudentsByCourseName(String courseName) : List<Student>
++getStudentsByCourseNameAndSubject(String courseName, String subject) : List<Student>
++getAllTeachers() : List<Teacher>
++findTeacherByID(int id) : Optional<Teacher>
++saveTeacher(Teacher teacher) : void
++removeTeacher(int id) : void
++findStudentByID(int id) : Optional<Student>
++saveStudent(Student student) : void
++removeStudent(int id) : void
++removeCourse(String courseName) : void
++getTeacherByUsername(String username) : Optional<Teacher>
++getTeacherReferenceById(int id) : Teacher
+}
+
+class PasswordService{
+-getSHA(String input) : byte[]
+-getSalt(int length) : String
+-getPepper() : String
+-toHexString(byte[] hash) : String
++hashPassword(String password) : String[]
++validatePassword(String password, String salt, String hashedPassword) : Boolean
+}
+}
+
+namespace Repositorys{
+class CourseRepository {
++findByName(String name) : List<Course>
+}
+
+class LearningFieldRepository {
++findByCourses_Name(String name) :  List<LearningField>
++findByName(String name) :  List<LearningField>
+}
+
+class StudentRepository {
++findByCourse_Name(String course) : List<Student>
++findByCourse_NameAndSubject_Name(String course, String subject) : List<Student>
++findByStudentId(int id) : Optional<Student>
+}
+
+class SubjectRepository {
++findByLearningFields_name(String name) : List<Subject>
+}
+
+class TeacherRepository {
++findAllByOrderByLastNameAsc() : List<Teacher>
++findByTeacherId(int id) : Optional<Teacher>
++findByUsername(@Param("username") String username) : Optional<Teacher>
++getTeacherReferenceByTeacherId(int teacherId) : Teacher
+}
+}
+@enduml

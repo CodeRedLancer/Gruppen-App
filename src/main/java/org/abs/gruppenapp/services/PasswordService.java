@@ -7,13 +7,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 public class PasswordService {
-    public static byte[] getSHA(String input) throws NoSuchAlgorithmException {
+    private static byte[] getSHA(String input) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
 
         return md.digest(input.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String getSalt(int length) {
+    private static String getSalt(int length) {
         int leftLimit = 97; // a
         int rightLimit = 122; // z
         Random random = new Random();
@@ -24,11 +24,11 @@ public class PasswordService {
                 .toString();
     }
 
-    public static String getPepper() {
+    private static String getPepper() {
         return "g$KzfS/?X<aT]8d@3";
     }
 
-    public static String toHexString(byte[] hash) {
+    private static String toHexString(byte[] hash) {
         BigInteger number = new BigInteger(1, hash);
         StringBuilder hexString = new StringBuilder(number.toString(16));
         while (hexString.length() < 32) {
