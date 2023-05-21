@@ -118,7 +118,7 @@ class SubjectRepository {
 class TeacherRepository {
 +findAllByOrderByLastNameAsc() : List<Teacher>
 +findByTeacherId(int id) : Optional<Teacher>
-+findByUsername(@Param("username") String username) : Optional<Teacher>
++findByUsername(String username) : Optional<Teacher>
 +getTeacherReferenceByTeacherId(int teacherId) : Teacher
 }
 }

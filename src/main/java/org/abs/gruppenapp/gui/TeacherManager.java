@@ -280,7 +280,7 @@ public class TeacherManager extends JFrame {
       String passwordString = new String(password);
 
       var tmp = databaseService.getTeacherByUsername(username);
-      if (tmp.isPresent()) {
+      if (tmp.isPresent() && tmp.get().getTeacherId() != Integer.parseInt(teacherId.getText())) {
         errorLabel.setText("Der Benutzername existiert bereits");
       } else {
         Teacher teacher = databaseService.getTeacherReferenceById(Integer.parseInt(teacherId.getText()));
