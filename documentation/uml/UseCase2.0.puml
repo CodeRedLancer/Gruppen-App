@@ -1,5 +1,4 @@
 @startuml
-left to right direction
 skinparam packageStyle rectangle
 left to right direction
 
@@ -9,18 +8,18 @@ actor admin as a
 t <|- a
 rectangle GruppenApp {
     a --> (Lehrer verwalten)
-     (Lehrer verwalten) ..> (Lehrer hinzufügen) : extends
+     (Lehrer verwalten) <.. (Lehrer hinzufügen) : extends
      (Lehrer hinzufügen) ..> (Daten eingeben) : includes
-     (Lehrer verwalten) ..> (Lehrer bearbeiten) : extends
+     (Lehrer verwalten) <.. (Lehrer bearbeiten) : extends
      (Lehrer bearbeiten) ..> (Daten eingeben) : includes
 
     a --> (Klassen verwalten)
-    (Klassen verwalten) ..> (Klasse erstellen) : extends
+    (Klassen verwalten) <.. (Klasse erstellen) : extends
     (Klasse erstellen) ..> (Daten eingeben) : includes
-    (Klassen verwalten) ..> (Klasse löschen) : extends
-    (Klassen verwalten) ..> (Lernfeld/Unterricht erstellen) : extends
+    (Klassen verwalten) <.. (Klasse löschen) : extends
+    (Klassen verwalten) <.. (Lernfeld/Unterricht erstellen) : extends
      (Lernfeld/Unterricht erstellen) ..> (Daten eingeben) : includes
-    (Klassen verwalten) ..> (Lernfeld/Unterricht Löschen) : extends
+    (Klassen verwalten) <.. (Lernfeld/Unterricht Löschen) : extends
 
 
     t --> (Gruppe erstellen)
@@ -30,12 +29,12 @@ rectangle GruppenApp {
 
 
     t --> (Schüler verwalten)
-    (Schüler verwalten) ..> (Klasse auswählen) : includes
-    (Schüler verwalten) ..> (Schüler hinzufügen) : extends
+    (Schüler verwalten) <.. (Klasse auswählen) : extends
+    (Schüler verwalten) <.. (Schüler hinzufügen) : extends
     (Schüler hinzufügen) ..> (Daten eingeben) : includes
-    (Schüler verwalten) ..> (Schüler ändern) : extends
+    (Schüler verwalten) <.. (Schüler ändern) : extends
     (Schüler ändern) ..> (Daten eingeben) : includes
-    (Schüler verwalten) ..> (Schüler löschen) : extends
+    (Schüler verwalten) <.. (Schüler löschen) : extends
 }
 
 @enduml
