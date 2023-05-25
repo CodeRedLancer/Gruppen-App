@@ -1,5 +1,6 @@
 
 .idea/
+src/main/resources/application.properties
 
 # Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
 

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,6 +15,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import lombok.AllArgsConstructor;
 import org.abs.gruppenapp.services.DatabaseService;
+import org.abs.gruppenapp.services.PasswordService;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -70,13 +72,21 @@ public class Login extends JFrame {
       errorLabel.setText(null);
       var username = nameTextField.getText();
       var password = new String(passwordTextField.getPassword());
+      var teacher = databaseService.getTeacherByUsername(username);
 
       if (username.equals("admin") && password.equals("1234")) {
         openDashboardAdmin();
-      } else if (username.equals("teacher") && password.equals("teacher")) {
-        openDashboardTeacher();
-      } else {
-        errorLabel.setText("Der Benutzername oder das Kennwort ist falsch");
+      }
+
+      try {
+        if (teacher.isPresent() && PasswordService.validatePassword(password, teacher.get().getSalt(), teacher.get().getPassword())) {
+          System.out.println("username is present & password is valid");
+          openDashboardTeacher();
+        } else {
+          errorLabel.setText("Der Benutzername oder das Kennwort ist falsch");
+        }
+      } catch (NoSuchAlgorithmException ex) {
+        throw new RuntimeException(ex);
       }
     });
 

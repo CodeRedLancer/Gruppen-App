@@ -281,7 +281,7 @@ public class StudentManager extends JFrame {
     frame.setLayout(new BorderLayout());
     setLocationRelativeTo(null);
 
-    JPanel panel = new JPanel(new GridLayout(3, 1));
+    JPanel panel = new JPanel(new GridLayout(5, 1));
     panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
     JPanel panelForBtn = new JPanel(new GridLayout(2, 1));

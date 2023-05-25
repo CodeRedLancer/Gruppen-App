@@ -25,7 +25,6 @@ public class DatabaseService {
   private final StudentRepository studentRepository;
   private final TeacherRepository teacherRepository;
 
-
   public List<String> getAllCourses() {
     List<Course> courses = (List<Course>) courseRepository.findAll();
     return courses.stream().map(Course::getName).toList();
@@ -129,5 +128,13 @@ public class DatabaseService {
     } else {
       courseRepository.delete(course.get(0));
     }
+  }
+
+  public Optional<Teacher> getTeacherByUsername(String username) {
+    return teacherRepository.findByUsername(username);
+  }
+
+  public Teacher getTeacherReferenceById(int id) {
+    return teacherRepository.getTeacherReferenceByTeacherId(id);
   }
 }

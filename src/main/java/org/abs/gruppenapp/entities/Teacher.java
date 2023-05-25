@@ -1,9 +1,7 @@
 package org.abs.gruppenapp.entities;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -40,6 +38,12 @@ public class Teacher {
 
   @Column(name = "password")
   private String password;
+
+  @Column(name = "salt")
+  private String salt;
+
+  @Column(name = "username")
+  private String username;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(

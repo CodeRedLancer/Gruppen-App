@@ -4,21 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import lombok.AllArgsConstructor;
 import org.abs.gruppenapp.entities.Teacher;
 import org.abs.gruppenapp.services.DatabaseService;
+import org.abs.gruppenapp.services.PasswordService;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -51,7 +46,7 @@ public class TeacherManager extends JFrame {
 
     JTable table = new JTable();
     table.setFillsViewportHeight(true);
-    String[] columnNames = {"ID", "Nachname", "Vorname"};
+    String[] columnNames = {"ID", "Nachname", "Vorname", "Username"};
     DefaultTableModel model = new DefaultTableModel();
     model.setColumnIdentifiers(columnNames);
     JTableHeader header = table.getTableHeader();
@@ -124,13 +119,14 @@ public class TeacherManager extends JFrame {
   }
 
   private void addDataIntoTable(DefaultTableModel model) {
-    Object[] row = new Object[3];
+    Object[] row = new Object[4];
     List<Teacher> teachers = databaseService.getAllTeachers();
 
     for (Teacher teacher : teachers) {
       row[0] = teacher.getTeacherId();
       row[1] = teacher.getLastName();
       row[2] = teacher.getFirstName();
+      row[3] = teacher.getUsername();
       model.addRow(row);
     }
   }
@@ -164,7 +160,7 @@ public class TeacherManager extends JFrame {
     frame.setLayout(new BorderLayout());
     setLocationRelativeTo(null);
 
-    JPanel panel = new JPanel(new GridLayout(3, 1));
+    JPanel panel = new JPanel(new GridLayout(6, 1));
     panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
     JPanel panelForBtn = new JPanel(new GridLayout(2, 1));
@@ -174,31 +170,60 @@ public class TeacherManager extends JFrame {
     JTextField lastnameTextField = new JTextField();
     JLabel firstnameLabel = new JLabel("Vorname");
     JTextField firstnameTextField = new JTextField();
+    JLabel usernameLabel = new JLabel("Username");
+    JTextField usernameTextField = new JTextField();
+    JLabel passwordLabel = new JLabel("Password");
+    JPasswordField passwordTextField = new JPasswordField();
     JButton confirmBtn = new JButton("Speichern");
+    JLabel errorLabel = new JLabel();
+    errorLabel.setForeground(Color.red);
     confirmBtn.setSize(20, 10);
 
     panel.add(lastnameLabel);
     panel.add(lastnameTextField);
     panel.add(firstnameLabel);
     panel.add(firstnameTextField);
+    panel.add(usernameLabel);
+    panel.add(usernameTextField);
+    panel.add(passwordLabel);
+    panel.add(passwordTextField);
 
     panelForBtn.add(confirmBtn);
+    panelForBtn.add(errorLabel);
 
     frame.add(panel, BorderLayout.CENTER);
     frame.add(panelForBtn, BorderLayout.SOUTH);
 
     confirmBtn.addActionListener(a -> {
+      errorLabel.setText(null);
       var lastname = lastnameTextField.getText();
       var firstname = firstnameTextField.getText();
+      var username = usernameTextField.getText();
+      char[] password = passwordTextField.getPassword();
+      String passwordString = new String(password);
 
-      Teacher teacher = new Teacher();
-      teacher.setLastName(lastname);
-      teacher.setFirstName(firstname);
+      var tmp = databaseService.getTeacherByUsername(username);
+      if (tmp.isPresent()) {
+        errorLabel.setText("Der Benutzername existiert bereits");
+      } else {
+        Teacher teacher = new Teacher();
+        teacher.setLastName(lastname);
+        teacher.setFirstName(firstname);
+        teacher.setUsername(username);
+        try {
+          String[] hashedPassword = PasswordService.hashPassword(passwordString);
+          teacher.setPassword(hashedPassword[0]);
+          teacher.setSalt(hashedPassword[1]);
 
-      databaseService.saveTeacher(teacher);
-      frame.setLocationRelativeTo(null);
-      frame.setVisible(false);
-      reloadFrame();
+        } catch (NoSuchAlgorithmException e) {
+          throw new RuntimeException(e);
+        }
+
+        databaseService.saveTeacher(teacher);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(false);
+        reloadFrame();
+      }
     });
 
     return frame;
@@ -211,42 +236,72 @@ public class TeacherManager extends JFrame {
     frame.setSize(500, 250);
     frame.setLayout(new BorderLayout());
 
-    JPanel panel = new JPanel(new GridLayout(3, 1));
+    JPanel panel = new JPanel(new GridLayout(6, 1));
     panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
     JPanel panelForBtn = new JPanel(new GridLayout(2, 1));
     panelForBtn.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+    JLabel teacherId = new JLabel(String.valueOf(foundTeacher.getTeacherId()));
     JLabel lastnameLabel = new JLabel("Nachname");
     JTextField lastnameTextField = new JTextField(foundTeacher.getLastName());
     JLabel firstnameLabel = new JLabel("Vorname");
     JTextField firstnameTextField = new JTextField(foundTeacher.getFirstName());
+    JLabel usernameLabel = new JLabel("Username");
+    JTextField usernameTextField = new JTextField(foundTeacher.getUsername());
+    JLabel passwordLabel = new JLabel("Password");
+    JPasswordField passwordTextField = new JPasswordField(foundTeacher.getPassword());
     JButton confirmBtn = new JButton("Speichern");
+    JLabel errorLabel = new JLabel();
+    errorLabel.setForeground(Color.red);
     confirmBtn.setSize(20, 10);
 
     panel.add(lastnameLabel);
     panel.add(lastnameTextField);
     panel.add(firstnameLabel);
     panel.add(firstnameTextField);
+    panel.add(usernameLabel);
+    panel.add(usernameTextField);
+    panel.add(passwordLabel);
+    panel.add(passwordTextField);
 
     panelForBtn.add(confirmBtn);
+    panelForBtn.add(errorLabel);
 
     frame.add(panel, BorderLayout.CENTER);
     frame.add(panelForBtn, BorderLayout.SOUTH);
 
     confirmBtn.addActionListener(a -> {
+      errorLabel.setText(null);
       var lastname = lastnameTextField.getText();
       var firstname = firstnameTextField.getText();
+      var username = usernameTextField.getText();
+      char[] password = passwordTextField.getPassword();
+      String passwordString = new String(password);
 
-      Teacher teacher = new Teacher();
-      teacher.setTeacherId(foundTeacher.getTeacherId());
-      teacher.setLastName(lastname);
-      teacher.setFirstName(firstname);
+      var tmp = databaseService.getTeacherByUsername(username);
+      if (tmp.isPresent() && tmp.get().getTeacherId() != Integer.parseInt(teacherId.getText())) {
+        errorLabel.setText("Der Benutzername existiert bereits");
+      } else {
+        Teacher teacher = databaseService.getTeacherReferenceById(Integer.parseInt(teacherId.getText()));
+        teacher.setLastName(lastname);
+        teacher.setFirstName(firstname);
+        teacher.setUsername(username);
 
-      databaseService.saveTeacher(teacher);
-      frame.setLocationRelativeTo(null);
-      frame.setVisible(false);
-      reloadFrame();
+        try {
+          String[] hashedPassword = PasswordService.hashPassword(passwordString);
+          teacher.setPassword(hashedPassword[0]);
+          teacher.setSalt(hashedPassword[1]);
+
+        } catch (NoSuchAlgorithmException e) {
+          throw new RuntimeException(e);
+        }
+
+        databaseService.saveTeacher(teacher);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(false);
+        reloadFrame();
+      }
     });
 
     return frame;
