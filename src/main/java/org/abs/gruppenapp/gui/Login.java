@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.security.NoSuchAlgorithmException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -68,7 +69,13 @@ public class Login extends JFrame {
 
     setVisible(true);
 
-    confirmBtn.addActionListener(e -> {
+    confirmBtn.addActionListener(e -> loginUser(e, confirmBtn, passwordTextField, errorLabel, nameTextField));
+    passwordTextField.addActionListener(e -> loginUser(e, confirmBtn, passwordTextField, errorLabel, nameTextField));
+  }
+
+  private void loginUser(ActionEvent a, JButton confirmBtn, JPasswordField passwordTextField, JLabel errorLabel,
+      JTextField nameTextField) {
+    if (a.getSource() == confirmBtn || a.getSource() == passwordTextField) {
       errorLabel.setText(null);
       var username = nameTextField.getText();
       var password = new String(passwordTextField.getPassword());
@@ -79,7 +86,8 @@ public class Login extends JFrame {
       }
 
       try {
-        if (teacher.isPresent() && PasswordService.validatePassword(password, teacher.get().getSalt(), teacher.get().getPassword())) {
+        if (teacher.isPresent() && PasswordService.validatePassword(password, teacher.get().getSalt(),
+            teacher.get().getPassword())) {
           System.out.println("username is present & password is valid");
           openDashboardTeacher();
         } else {
@@ -88,21 +96,7 @@ public class Login extends JFrame {
       } catch (NoSuchAlgorithmException ex) {
         throw new RuntimeException(ex);
       }
-    });
-
-    passwordTextField.addActionListener(e -> {
-      errorLabel.setText(null);
-      var username = nameTextField.getText();
-      var password = new String(passwordTextField.getPassword());
-
-      if (username.equals("admin") && password.equals("1234")) {
-        openDashboardAdmin();
-      } else if (username.equals("teacher") && password.equals("teacher")) {
-        openDashboardTeacher();
-      } else {
-        errorLabel.setText("Der Benutzername oder das Kennwort ist falsch");
-      }
-    });
+    }
   }
 
   private void openDashboardAdmin() {
