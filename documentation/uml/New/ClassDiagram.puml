@@ -1,4 +1,5 @@
 @startuml
+left to right direction
 
 namespace Entitys{
 class Course {
@@ -122,4 +123,15 @@ class TeacherRepository {
 +getTeacherReferenceByTeacherId(int teacherId) : Teacher
 }
 }
+
+Entitys.Course "n" *-- "1" Repositorys.CourseRepository : Stores
+Entitys.Student "n" *-- "1" Repositorys.StudentRepository : Stores
+Entitys.Teacher "n" *-- "1" Repositorys.TeacherRepository : Stores
+Entitys.Subject "n" *-- "1" Repositorys.SubjectRepository : Stores
+
+Services.DatabaseService "1" o-- "1" Repositorys.CourseRepository : uses
+Services.DatabaseService "1" o-- "1" Repositorys.LearningFieldRepository : uses
+Services.DatabaseService "1" o-- "1" Repositorys.SubjectRepository : uses
+Services.DatabaseService "1" o-- "1" Repositorys.StudentRepository : uses
+Services.DatabaseService "1" o-- "1" Repositorys.TeacherRepository : uses
 @enduml
