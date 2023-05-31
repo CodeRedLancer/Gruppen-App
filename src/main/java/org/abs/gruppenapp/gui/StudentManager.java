@@ -30,7 +30,7 @@ public class StudentManager extends JFrame {
 
   private final DatabaseService databaseService;
 
-  public void initialize(){
+  public void initialize() {
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     setTitle("GroupMaker 8");
@@ -42,41 +42,19 @@ public class StudentManager extends JFrame {
     var mainPanel = new JPanel(new BorderLayout());
     var backPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     var menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    var checkboxPanel = new JPanel(new GridLayout(1,2));
+    var checkboxPanel = new JPanel(new GridLayout(1, 2));
 
     JButton logoutBtn = new JButton("Ausloggen");
     JButton backToDashboardBtn = new JButton("Zurück zur Übersicht");
     JButton addStudentBtn = new JButton("Schüler hinzufügen");
     JButton editStudentBtn = new JButton("Schüler ändern");
     JButton deleteStudentBtn = new JButton("Schüler löschen");
+    addStudentBtn.setEnabled(false);
     editStudentBtn.setEnabled(false);
     deleteStudentBtn.setEnabled(false);
 
     var classSelection = getClasses();
     checkboxPanel.add(classSelection);
-
-    classSelection.addActionListener(event -> {
-      clearDownPanel(mainPanel);
-      var classSelected = (String) classSelection.getSelectedItem();
-       updateMainPanel(mainPanel, classSelection);
-
-//      var table = createTable(courseSelected, subjectSelected);
-//      table.setFillsViewportHeight(true);
-//      JScrollPane scrollPane = new JScrollPane(table);
-
-
-    });
-
-    JTable table = new JTable();
-    table.setFillsViewportHeight(true);
-    String[] columnNames = {"ID", "Nachname", "Vorname", "Klasse", "Note"};
-    DefaultTableModel model = new DefaultTableModel();
-    model.setColumnIdentifiers(columnNames);
-    JTableHeader header = table.getTableHeader();
-    header.setBackground(Color.yellow);
-    table.setGridColor(Color.GRAY);
-    table.setModel(model);
-    JScrollPane scrollPane = new JScrollPane(table);
 
     loginPanel.add(logoutBtn);
     backPanel.add(backToDashboardBtn);
@@ -85,77 +63,108 @@ public class StudentManager extends JFrame {
     menuPanel.add(editStudentBtn);
     menuPanel.add(deleteStudentBtn);
     mainPanel.add(menuPanel, BorderLayout.NORTH);
-    mainPanel.add(scrollPane, BorderLayout.CENTER);
 
     add(loginPanel, BorderLayout.NORTH);
     add(mainPanel, BorderLayout.CENTER);
     add(backPanel, BorderLayout.SOUTH);
 
-    addDataIntoTable(model, classSelection.getSelectedItem().toString());
+    setVisible(true);
 
-    table.getSelectionModel().addListSelectionListener(e -> {
-      menuPanel.removeAll();
-      editStudentBtn.setEnabled(true);
-      deleteStudentBtn.setEnabled(true);
-      menuPanel.add(addStudentBtn);
-      menuPanel.add(editStudentBtn);
-      menuPanel.add(deleteStudentBtn);
+    classSelection.addActionListener(event -> {
+      mainPanel.removeAll();
 
-      mainPanel.remove(menuPanel);
+      var courseSelected = (String) classSelection.getSelectedItem();
+
+      var table = createTable(courseSelected);
+      table.setFillsViewportHeight(true);
+      JScrollPane scrollPane = new JScrollPane(table);
+
       mainPanel.add(menuPanel, BorderLayout.NORTH);
-
-      menuPanel.revalidate();
-      menuPanel.repaint();
+      mainPanel.add(scrollPane);
       mainPanel.revalidate();
       mainPanel.repaint();
+
+      table.getSelectionModel().addListSelectionListener(e -> {
+        menuPanel.removeAll();
+        addStudentBtn.setEnabled(true);
+        editStudentBtn.setEnabled(true);
+        deleteStudentBtn.setEnabled(true);
+        menuPanel.add(addStudentBtn);
+        menuPanel.add(editStudentBtn);
+        menuPanel.add(deleteStudentBtn);
+
+        mainPanel.remove(menuPanel);
+        mainPanel.add(menuPanel, BorderLayout.NORTH);
+
+        menuPanel.revalidate();
+        menuPanel.repaint();
+        mainPanel.revalidate();
+        mainPanel.repaint();
+      });
+
+      addStudentBtn.addActionListener(a -> {
+        var frame = createStudentForm();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+      });
+
+      editStudentBtn.addActionListener(a -> {
+        int rowNum = table.getSelectedRow();
+        var studentId = table.getValueAt(rowNum, 0).toString();
+
+        var student = databaseService.findStudentByID(Integer.parseInt(studentId));
+
+        var frame = createStudentForm(student.get());
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+      });
+
+      deleteStudentBtn.addActionListener(a -> {
+        int rowNum = table.getSelectedRow();
+        var value = table.getValueAt(rowNum, 0).toString();
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.removeRow(rowNum);
+        databaseService.removeStudent(Integer.parseInt(value));
+        reloadFrame();
+      });
     });
-
-    addStudentBtn.addActionListener(a -> {
-      var frame = createStudentForm();
-      frame.setLocationRelativeTo(null);
-      frame.setVisible(true);
-    });
-
-    editStudentBtn.addActionListener(a -> {
-      int rowNum = table.getSelectedRow();
-      var studentId = table.getValueAt(rowNum, 0).toString();
-
-      var student = databaseService.findStudentByID(Integer.parseInt(studentId));
-
-      var frame = createStudentForm(student.get());
-      frame.setLocationRelativeTo(null);
-      frame.setVisible(true);
-    });
-
-    deleteStudentBtn.addActionListener(a -> {
-      int rowNum = table.getSelectedRow();
-      var value = table.getValueAt(rowNum, 0).toString();
-      model.removeRow(rowNum);
-      databaseService.removeStudent(Integer.parseInt(value));
-      reloadFrame();
-    });
-
-    setVisible(true);
 
     logoutBtn.addActionListener(a -> logout());
     backToDashboardBtn.addActionListener(a -> backToTeacherDashboard());
   }
 
-  private void clearDownPanel(JPanel downPanel) {
-    downPanel.removeAll();
-    downPanel.revalidate();
-    downPanel.repaint();
-  }
+  private JTable createTable(String courseName) {
+    JTable table = new JTable() {
+      @Override
+      public Class<?> getColumnClass(int column) {
+        return switch (column) {
+          case 0, 1, 2, 3, 4 -> String.class;
+          default -> throw new IllegalStateException("Unexpected value: " + column);
+        };
+      }
+    };
+    DefaultTableModel model = new DefaultTableModel();
 
-  private void updateMainPanel(JPanel mainPanel, java.awt.Component... elements) {
-    mainPanel.removeAll();
+    JTableHeader header = table.getTableHeader();
+    header.setBackground(Color.yellow);
+    table.setGridColor(Color.GRAY);
 
-    for (java.awt.Component o : elements) {
-      mainPanel.add(o);
+    String[] columnNames = {"ID", "Nachname", "Vorname", "Klasse", "Note"};
+    model.setColumnIdentifiers(columnNames);
+    table.setModel(model);
+
+    List<Student> students = databaseService.getStudentsByCourseName(courseName);
+
+    for (Student student : students) {
+      Object[] o = new Object[5];
+      o[0] = student.getStudentId();
+      o[1] = student.getLastName();
+      o[2] = student.getFirstName();
+      o[3] = student.getCourse().getName();
+      o[4] = student.getEvaluation();
+      model.addRow(o);
     }
-
-    mainPanel.revalidate();
-    mainPanel.repaint();
+    return table;
   }
 
   private JComboBox<String> getClasses() {
@@ -188,21 +197,7 @@ public class StudentManager extends JFrame {
     setVisible(false);
   }
 
-  private void addDataIntoTable(DefaultTableModel model, String course) {
-    Object[] row = new Object[6];
-    List<Student> students = databaseService.getStudentsByCourseName(course);
-
-    for (Student student : students) {
-      row[0] = student.getStudentId();
-      row[1] = student.getLastName();
-      row[2] = student.getFirstName();
-      row[3] = student.getCourse().getName();
-      row[4] = student.getEvaluation();
-      model.addRow(row);
-    }
-  }
-
-  private JFrame createStudentForm(){
+  private JFrame createStudentForm() {
     JFrame frame = new JFrame();
 
     frame.setTitle("GroupMaker 8");
@@ -233,8 +228,6 @@ public class StudentManager extends JFrame {
     panel.add(firstnameTextField);
     panel.add(classLabel);
     panel.add(classBox);
-//    panel.add(subjectLabel);
-//    panel.add(subjectBox);
     panel.add(leistungLabel);
     panel.add(leistungTextField);
 
@@ -247,7 +240,6 @@ public class StudentManager extends JFrame {
       var lastname = lastnameTextField.getText();
       var firstname = firstnameTextField.getText();
       var course = classBox.getSelectedItem().toString();
-//      var subject = subjectBox.getSelectedItem();
       var evaluation = leistungTextField.getText();
 
       Student student = new Student();
@@ -256,7 +248,6 @@ public class StudentManager extends JFrame {
 
       Course course1 = databaseService.getCourseByName(course);
       student.setCourse(course1);
-//      student.setSubject(subject);
       student.setEvaluation(Integer.parseInt(evaluation));
 
       databaseService.saveStudent(student);
@@ -273,7 +264,7 @@ public class StudentManager extends JFrame {
     return createComboBox(classNames);
   }
 
-  private JFrame createStudentForm(Student foundStudent){
+  private JFrame createStudentForm(Student foundStudent) {
     JFrame frame = new JFrame();
 
     frame.setTitle("GroupMaker 8");
