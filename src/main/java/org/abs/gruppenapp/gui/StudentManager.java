@@ -280,12 +280,15 @@ public class StudentManager extends JFrame {
 
     JLabel lastnameLabel = new JLabel("Nachname");
     JTextField lastnameTextField = new JTextField();
+    lastnameTextField.setText(foundStudent.getLastName());
     JLabel firstnameLabel = new JLabel("Vorname");
     JTextField firstnameTextField = new JTextField();
+    firstnameTextField.setText(foundStudent.getFirstName());
     JLabel classLabel = new JLabel("Klasse");
-    JComboBox<String> classBox = new JComboBox<>();
+    JComboBox<String> classBox = setClasses();
     JLabel leistungLabel = new JLabel("Note");
     JTextField leistungTextField = new JTextField();
+    leistungTextField.setText(String.valueOf(foundStudent.getEvaluation()));
     JButton confirmBtn = new JButton("Speichern");
     confirmBtn.setSize(20, 10);
 
@@ -306,7 +309,7 @@ public class StudentManager extends JFrame {
     confirmBtn.addActionListener(a -> {
       var lastname = lastnameTextField.getText();
       var firstname = firstnameTextField.getText();
-      var course = classBox.getSelectedItem();
+      var course = classBox.getSelectedItem().toString();
       var evaluation = leistungTextField.getText();
 
       Student student = new Student();
@@ -314,6 +317,10 @@ public class StudentManager extends JFrame {
       student.setLastName(lastname);
       student.setFirstName(firstname);
       student.setEvaluation(Integer.parseInt(evaluation));
+
+      var courseName = databaseService.getCourseByName(course);
+      student.setCourse(courseName);
+
 
       databaseService.saveStudent(student);
       frame.setLocationRelativeTo(null);
