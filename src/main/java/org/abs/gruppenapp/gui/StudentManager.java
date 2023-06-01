@@ -321,7 +321,6 @@ public class StudentManager extends JFrame {
       var courseName = databaseService.getCourseByName(course);
       student.setCourse(courseName);
 
-
       databaseService.saveStudent(student);
       frame.setLocationRelativeTo(null);
       frame.setVisible(false);
