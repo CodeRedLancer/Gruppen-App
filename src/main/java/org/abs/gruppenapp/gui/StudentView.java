@@ -135,6 +135,10 @@ public class StudentView extends JFrame {
         }
       }
 
+      System.out.println("-------------------------------------------------------------------------------------------------------" + studentsToGroup.size());
+      List<StudentToGroup> Test = SortStudents.sort("homogen", studentsToGroup);
+      ArrayList<StudentToGroup[]> sortetListOutput = SortStudents.output("5", Test);
+
       var groupFrame = createGroupForm();
       groupFrame.setLocationRelativeTo(null);
       groupFrame.setVisible(true);
